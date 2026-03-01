@@ -10,12 +10,12 @@ export default function StudentRewardsPage() {
   const [category, setCategory] = useState("All Rewards");
   const [selected, setSelected] = useState(null);
 
-  const coins   = getStudentCoins(currentUser._id);
+  const coins   = getStudentCoins(currentUser.id);
   const items   = shopItems.filter(i => category === "All Rewards" || i.category === category);
   const canBuy  = selected && coins >= selected.cost;
 
   const handleBuy = () => {
-    const ok = spendCoins(currentUser._id, selected.cost, selected.name, selected._id || selected.id);
+    const ok = spendCoins(currentUser.id, selected.cost, selected.name);
     if (ok) { showToast(`✅ Purchased: ${selected.name}!`); setSelected(null); }
     else      showToast("❌ Not enough coins!", "error");
   };
@@ -54,10 +54,9 @@ export default function StudentRewardsPage() {
       <div className="gap-3 grid grid-cols-2">
         {items.map(item => {
           const affordable = coins >= item.cost;
-          const itemKey = item._id || item.id;
           return (
             <div
-              key={itemKey}
+              key={item.id}
               onClick={() => setSelected(item)}
               className={`bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 border-2
                 ${affordable ? "border-transparent" : "border-red-100"}`}
@@ -70,7 +69,10 @@ export default function StudentRewardsPage() {
                     {item.tag}
                   </span>
                 )}
-                <span className="text-5xl">{item.emoji}</span>
+                {item.image
+                  ? <img src={item.image} alt={item.name} className="rounded-xl w-16 h-16 object-cover" />
+                  : <span className="text-5xl">{item.emoji}</span>
+                }
               </div>
               {/* Body */}
               <div className="p-3">
@@ -91,7 +93,12 @@ export default function StudentRewardsPage() {
       {selected && (
         <Modal onClose={() => setSelected(null)}>
           <div className="text-center">
-            <div className="mb-4 text-6xl">{selected.emoji}</div>
+            <div className="flex justify-center mb-4">
+              {selected.image
+                ? <img src={selected.image} alt={selected.name} className="rounded-2xl w-24 h-24 object-cover" />
+                : <div className="text-6xl">{selected.emoji}</div>
+              }
+            </div>
             <h3 className="mb-1 font-poppins font-black text-slate-800 text-xl">{selected.name}</h3>
             <p className="mb-4 text-slate-500 text-sm">{selected.desc}</p>
             <div className="flex justify-center items-center gap-2 mb-1">

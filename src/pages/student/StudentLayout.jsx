@@ -6,6 +6,7 @@ const TABS = [
   { id: "home",    label: "Home",    icon: "🏠", path: "/student/home"    },
   { id: "wallet",  label: "Wallet",  icon: "💳", path: "/student/wallet"  },
   { id: "rewards", label: "Rewards", icon: "🎁", path: "/student/rewards" },
+  { id: "tests",   label: "Tests",   icon: "📝", path: "/student/tests"   },
   { id: "profile", label: "Profile", icon: "👤", path: "/student/profile" },
 ];
 

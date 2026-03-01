@@ -1,7 +1,5 @@
 // src/services/api.js
-
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 const getHeaders = () => {
   const token = localStorage.getItem('coined_token');
   return {
@@ -31,10 +29,10 @@ export const authAPI = {
 
 // ── Students ─────────────────────────────────────
 export const studentsAPI = {
-  getAll:          ()                            => request('GET',    '/students'),
-  getOne:          (id)                          => request('GET',    `/students/${id}`),
-  deleteOne:       (id)                          => request('DELETE', `/students/${id}`),
-  getTransactions: (id)                          => request('GET',    `/students/${id}/transactions`),
+  getAll:          ()              => request('GET',    '/students'),
+  getOne:          (id)            => request('GET',    `/students/${id}`),
+  deleteOne:       (id)            => request('DELETE', `/students/${id}`),
+  getTransactions: (id)            => request('GET',    `/students/${id}/transactions`),
   addCoins:        (id, amount, label, category) =>
     request('POST', `/students/${id}/coins`, { amount, type: 'earn', label, category }),
   removeCoins:     (id, amount, label, category) =>
@@ -43,24 +41,8 @@ export const studentsAPI = {
 
 // ── Shop ─────────────────────────────────────────
 export const shopAPI = {
-  getAll:     ()     => request('GET',    '/shop'),
-  addItem:    (item) => request('POST',   '/shop', item),
-  deleteItem: (id)   => request('DELETE', `/shop/${id}`),
-  buyItem:    (id)   => request('POST',   `/shop/${id}/buy`),
-};
-
-// ── Quizzes ──────────────────────────────────────
-export const quizzesAPI = {
-  getAll:        ()            => request('GET',    '/quizzes'),
-  getOne:        (id)          => request('GET',    `/quizzes/${id}`),
-  create:        (data)        => request('POST',   '/quizzes', data),
-  update:        (id, data)    => request('PUT',    `/quizzes/${id}`, data),
-  delete:        (id)          => request('DELETE', `/quizzes/${id}`),
-  getResults:    (id)          => request('GET',    `/quizzes/${id}/results`),
-
-  // ✅ FIX: backend da /submit bor (/attempt emas)
-  submitAttempt: (id, answers) => request('POST',   `/quizzes/${id}/submit`, { answers }),
-
-  // ✅ FIX: alohida myAttempts yo'q — getAll da har quiz ichida attempt field keladi
-  myAttempts:    ()            => request('GET',    '/quizzes'),
+  getAll:    ()     => request('GET',    '/shop'),
+  addItem:   (item) => request('POST',   '/shop', item),
+  deleteItem:(id)   => request('DELETE', `/shop/${id}`),
+  buyItem:   (id)   => request('POST',   `/shop/${id}/buy`),
 };
