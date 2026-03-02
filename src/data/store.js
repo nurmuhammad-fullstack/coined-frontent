@@ -3,12 +3,8 @@
 
 export const USERS = [
   { _id: "1", name: "Alex Thompson",  email: "alex@school.uz",    password: "1234", role: "student", class: "8-B", avatar: "AT", color: "#22c55e" },
-  { _id: "2", name: "Maria Garcia",   email: "maria@school.uz",   password: "1234", role: "student", class: "8-B", avatar: "MG", color: "#3b82f6" },
-  { _id: "3", name: "James Wilson",   email: "james@school.uz",   password: "1234", role: "student", class: "8-B", avatar: "JW", color: "#f97316" },
-  { _id: "4", name: "Sophie Chen",    email: "sophie@school.uz",  password: "1234", role: "student", class: "8-A", avatar: "SC", color: "#8b5cf6" },
-  { _id: "5", name: "Luca Rossi",     email: "luca@school.uz",    password: "1234", role: "student", class: "8-A", avatar: "LR", color: "#ef4444" },
-  { _id: "6", name: "Emma Brown",     email: "emma@school.uz",    password: "1234", role: "student", class: "8-A", avatar: "EB", color: "#eab308" },
-  { _id: "7", name: "Ms. Johnson",    email: "teacher@school.uz", password: "admin", role: "teacher", avatar: "MJ", color: "#f97316" },
+  { _id: "2", name: "Emma Brown",     email: "emma@school.uz",    password: "1234", role: "student", class: "8-A", avatar: "EB", color: "#eab308" },
+  { _id: "3", name: "Nurmuhammad",    email: "teacher@school.uz", password: "admin", role: "teacher", avatar: "MJ", color: "#f97316" },
 ];
 
 export const INITIAL_COINS = {
@@ -39,3 +35,4 @@ export const INITIAL_SHOP_ITEMS = [
   { id: 7, name: "Candy Bar",           cost: 100,  category: "Snacks",          emoji: "🍫", tag: null,  desc: "Choose your favorite candy"         },
   { id: 8, name: "Extra Recess",        cost: 350,  category: "Fun",             emoji: "⚽", tag: null,  desc: "15 extra minutes of recess"         },
 ];
+

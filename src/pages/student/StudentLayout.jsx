@@ -1,7 +1,7 @@
 // src/pages/student/StudentLayout.jsx
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
-import { Toast } from "../../components/ui";
+import { Toast, Avatar } from "../../components/ui";
 import { FaHome, FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaCoins, FaGraduationCap, FaSignOutAlt } from "react-icons/fa";
 
 const TABS = [
@@ -84,9 +84,7 @@ export default function StudentLayout() {
           <div className="flex-shrink-0 px-3 pt-4 pb-4 border-slate-100 border-t">
             <div className="bg-brand-50 mb-3 p-3 rounded-2xl">
               <div className="flex items-center gap-3">
-                <div className="flex justify-center items-center bg-brand-100 rounded-xl w-9 h-9 text-lg">
-                  <FaGraduationCap className="text-brand-500" />
-                </div>
+                <Avatar user={currentUser} size={36} />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-700 text-xs truncate">{currentUser?.name || "Student"}</p>
                   <p className="text-[10px] text-slate-400 truncate">{currentUser?.email}</p>

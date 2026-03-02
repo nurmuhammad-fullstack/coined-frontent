@@ -12,9 +12,17 @@ export default function StudentProfilePage() {
 
   const handleLogout = () => { logout(); navigate("/"); };
 
-  const SETTINGS = [
+const handleSettingsClick = (label) => {
+    if (label === "Account Settings") {
+      navigate("/account-settings");
+    } else if (label === "Notifications") {
+      navigate("/notifications");
+    }
+  };
+
+const SETTINGS = [
     { icon: "⚙️", label: "Account Settings" },
-    { icon: "🔔", label: "Notifications"    },
+    { icon: "🔔", label: "Notifications", badge: true },
     { icon: "❓", label: "Help & Support"   },
     { icon: "📋", label: "Terms & Privacy"  },
   ];
@@ -65,14 +73,19 @@ export default function StudentProfilePage() {
         </div>
       </Card>
 
-      {/* Settings */}
+{/* Settings */}
       <Card className="p-4">
         <SectionLabel>Settings</SectionLabel>
         {SETTINGS.map((s, i) => (
-          <div key={s.label} className={`flex items-center justify-between py-3 ${i < SETTINGS.length - 1 ? "border-b border-slate-50" : ""}`}>
+          <div 
+            key={s.label} 
+            onClick={() => handleSettingsClick(s.label)}
+            className={`flex items-center justify-between py-3 cursor-pointer hover:bg-slate-50 rounded-xl px-1 transition-colors ${i < SETTINGS.length - 1 ? "border-b border-slate-50" : ""}`}
+          >
             <div className="flex items-center gap-3">
               <span className="text-lg">{s.icon}</span>
               <span className="font-bold text-slate-700 text-sm">{s.label}</span>
+              {s.badge && <span className="bg-red-500 px-1.5 py-0.5 rounded-full text-[10px] text-white">new</span>}
             </div>
             <span className="text-slate-300 text-sm">›</span>
           </div>

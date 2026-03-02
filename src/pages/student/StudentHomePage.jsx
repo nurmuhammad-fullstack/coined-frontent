@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useApp } from "../../context/AppContext";
-import { Card, SectionLabel } from "../../components/ui";
+import { Card, SectionLabel, Avatar } from "../../components/ui";
 import { FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaCoins, FaBell, FaArrowUp, FaArrowDown, FaEnvelopeOpen } from "react-icons/fa";
 
 export default function StudentHomePage() {
@@ -36,9 +36,12 @@ export default function StudentHomePage() {
           <p className="font-semibold text-slate-500 text-xs">Welcome back,</p>
           <h2 className="font-poppins font-black text-slate-800 text-2xl md:text-3xl">Hi, {fn} 👋</h2>
         </div>
-        <button className="flex justify-center items-center bg-white shadow-sm border-none rounded-full w-10 h-10 text-lg cursor-pointer">
-          <FaBell className="text-slate-600" />
-        </button>
+        <div className="flex items-center gap-3">
+          <Avatar user={currentUser} size={40} />
+          <button className="flex justify-center items-center bg-white shadow-sm border-none rounded-full w-10 h-10 text-lg cursor-pointer">
+            <FaBell className="text-slate-600" />
+          </button>
+        </div>
       </div>
 
       {/* Balance card */}

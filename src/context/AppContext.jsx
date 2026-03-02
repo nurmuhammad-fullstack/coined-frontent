@@ -1,6 +1,6 @@
 // src/context/AppContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { authAPI, studentsAPI, shopAPI, quizzesAPI } from "../services/api";
+import { authAPI, studentsAPI, shopAPI, quizzesAPI, notificationsAPI } from "../services/api";
 import { FaCoins } from "react-icons/fa";
 
 const AppContext = createContext(null);
@@ -13,6 +13,8 @@ export function AppProvider({ children }) {
   const [quizzes, setQuizzes]           = useState([]);
   const [quizzesLoaded, setQuizzesLoaded] = useState(false);
   const [quizAttempts, setQuizAttempts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount]   = useState(0);
   const [toast, setToast]               = useState(null);
   const [loading, setLoading]           = useState(true);
 
@@ -45,6 +47,18 @@ export function AppProvider({ children }) {
         .then(txs => setTransactions(prev => ({ ...prev, [currentUser._id]: txs })))
         .catch(console.error);
     }
+}, [currentUser]);
+
+  // Load notifications when user is logged in
+  useEffect(() => {
+    if (currentUser) {
+      notificationsAPI.getAll()
+        .then(setNotifications)
+        .catch(console.error);
+      notificationsAPI.getUnreadCount()
+        .then(data => setUnreadCount(data.count))
+        .catch(console.error);
+    }
   }, [currentUser]);
 
   const showToast = (msg, type = "success") => {
@@ -71,6 +85,30 @@ export function AppProvider({ children }) {
     setTransactions({});
     setQuizzes([]);
     setQuizAttempts([]);
+  };
+
+  const updateCurrentUser = async (data) => {
+    try {
+      const updatedUser = await authAPI.updateProfile(data);
+      // Fetch fresh user data to ensure we have latest avatar
+      const freshUser = await authAPI.me();
+      setCurrentUser(freshUser);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, message: err.message };
+    }
+  };
+
+  const uploadAvatar = async (file) => {
+    try {
+      const result = await authAPI.uploadAvatar(file);
+      // Fetch fresh user data to get updated avatar URL from server
+      const freshUser = await authAPI.me();
+      setCurrentUser(freshUser);
+      return { ok: true, avatar: freshUser.avatar };
+    } catch (err) {
+      return { ok: false, message: err.message };
+    }
   };
 
   const createStudent = async (data) => {
@@ -164,7 +202,47 @@ export function AppProvider({ children }) {
     if (res.coinsEarned > 0) {
       setCurrentUser(prev => ({ ...prev, coins: (prev.coins || 0) + res.coinsEarned }));
     }
-    return res;
+return res;
+  };
+
+  // Notification helpers
+  const loadNotifications = async () => {
+    try {
+      const data = await notificationsAPI.getAll();
+      setNotifications(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const markNotificationAsRead = async (id) => {
+    try {
+      await notificationsAPI.markAsRead(id);
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, read: true } : n));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const markAllNotificationsAsRead = async () => {
+    try {
+      await notificationsAPI.markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    try {
+      await notificationsAPI.clearAll();
+      setNotifications([]);
+      setUnreadCount(0);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (loading) {
@@ -180,9 +258,9 @@ export function AppProvider({ children }) {
     );
   }
 
-  return (
+return (
     <AppContext.Provider value={{
-      currentUser, login, logout,
+      currentUser, login, logout, updateCurrentUser, uploadAvatar,
       students, setStudents,
       shopItems, setShopItems,
       transactions,
@@ -195,6 +273,8 @@ export function AppProvider({ children }) {
       quizAttempts, setQuizAttempts,
       createQuiz, updateQuiz, deleteQuiz,
       submitQuizAttempt,
+      notifications, unreadCount,
+      loadNotifications, markNotificationAsRead, markAllNotificationsAsRead, clearAllNotifications,
       toast, showToast,
     }}>
       {children}

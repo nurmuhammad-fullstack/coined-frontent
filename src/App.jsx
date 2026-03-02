@@ -6,6 +6,8 @@ import { Toast } from "./components/ui";
 
 // Pages
 import LoginPage                  from "./pages/LoginPage";
+import AccountSettingsPage        from "./pages/AccountSettingsPage";
+import NotificationsPage          from "./pages/NotificationsPage";
 import StudentLayout              from "./pages/student/StudentLayout";
 import StudentHomePage            from "./pages/student/StudentHomePage";
 import StudentWalletPage            from "./pages/student/StudentWalletPage";
@@ -30,6 +32,12 @@ export default function App() {
         <Routes>
           {/* Auth */}
           <Route path="/" element={<LoginPage />} />
+
+{/* Account Settings - accessible to all */}
+          <Route path="/account-settings" element={<AccountSettingsPage />} />
+          
+          {/* Notifications - accessible to all */}
+          <Route path="/notifications" element={<NotificationsPage />} />
 
           {/* Student */}
           <Route path="/student" element={

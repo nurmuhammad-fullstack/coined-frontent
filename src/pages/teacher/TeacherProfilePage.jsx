@@ -1,7 +1,7 @@
 // src/pages/teacher/TeacherProfilePage.jsx
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
-import { Card, SectionLabel } from "../../components/ui";
+import { Card, SectionLabel, Avatar } from "../../components/ui";
 
 export default function TeacherProfilePage() {
   const { currentUser, students, shopItems, getStudentTransactions, logout } = useApp();
@@ -10,6 +10,14 @@ export default function TeacherProfilePage() {
   const totalTxs = students.reduce((a, s) => a + getStudentTransactions(s._id).length, 0);
 
   const handleLogout = () => { logout(); navigate("/"); };
+
+const handleSettingsClick = (label) => {
+    if (label === "Account Settings") {
+      navigate("/account-settings");
+    } else if (label === "Notifications") {
+      navigate("/notifications");
+    }
+  };
 
   const SETTINGS = [
     { icon: "⚙️", label: "Account Settings"  },
@@ -23,8 +31,8 @@ export default function TeacherProfilePage() {
     <div className="space-y-4 p-5">
       {/* Profile */}
       <Card className="p-6 text-center">
-        <div className="flex justify-center items-center bg-gradient-to-br from-amber-400 to-orange-500 shadow-amber-200 shadow-lg mx-auto mb-3 rounded-3xl w-20 h-20 text-4xl">
-          👨‍🏫
+        <div className="flex justify-center mb-3">
+          <Avatar user={currentUser} size={80} />
         </div>
         <h2 className="mb-1 font-poppins font-black text-slate-800 text-2xl">{currentUser.name}</h2>
         <span className="inline-flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full font-bold text-amber-700 text-xs">
@@ -51,8 +59,9 @@ export default function TeacherProfilePage() {
       <Card className="p-4">
         <SectionLabel>Settings</SectionLabel>
         {SETTINGS.map((s, i) => (
-          <div
+          <div 
             key={s.label}
+            onClick={() => handleSettingsClick(s.label)}
             className={`flex items-center justify-between py-3 cursor-pointer hover:bg-slate-50 rounded-xl px-1 transition-colors
               ${i < SETTINGS.length - 1 ? "border-b border-slate-50" : ""}`}
           >

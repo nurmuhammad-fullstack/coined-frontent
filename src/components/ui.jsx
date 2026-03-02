@@ -3,12 +3,13 @@
 
 import { useApp } from "../context/AppContext";
 import { useEffect } from "react";
+import { getAvatarUrl } from "../services/api";
 
 /* ── Toast ── */
 export function Toast() {
   const { toast } = useApp();
   if (!toast) return null;
-  const bg = toast.type === "error" ? "bg-red-500" : toast.type === "warning" ? "bg-yellow-500" : "bg-gray-900";
+  const bg = toast.type === "error" ? "bg-red-500" : toast.type === "warning" ? "bg-yellow-500" : "bg-gradient-to-r from-brand-500 to-brand-600";
   return (
     <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-[999] ${bg} text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-2xl animate-bounce-in whitespace-nowrap`}>
       {toast.msg}
@@ -28,6 +29,25 @@ export function CoinBadge({ amount, size = "md" }) {
 
 /* ── Avatar ── */
 export function Avatar({ user, size = 40 }) {
+  // Check if avatar is an uploaded image
+  const isImage = user?.avatar && (user.avatar.startsWith('/uploads') || user.avatar.startsWith('data:') || user.avatar.startsWith('http'));
+  
+  if (isImage) {
+    let src = user.avatar.startsWith('/uploads') ? getAvatarUrl(user.avatar) : user.avatar;
+    // Prevent browser caching by adding timestamp parameter
+    const separator = src.includes('?') ? '&' : '?';
+    src = `${src}${separator}_t=${Date.now()}`;
+    
+    return (
+      <img
+        src={src}
+        alt="Avatar"
+        className="flex flex-shrink-0 rounded-full object-cover select-none"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  
   return (
     <div
       className="flex flex-shrink-0 justify-center items-center rounded-full font-black text-white select-none"
