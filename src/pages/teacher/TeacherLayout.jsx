@@ -2,7 +2,7 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
-import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt } from "react-icons/fa";
+import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt, FaBell } from "react-icons/fa";
 
 const TABS = [
   { id: "students", label: "Students", icon: FaUsers,  path: "/teacher/students" },
@@ -14,7 +14,7 @@ const TABS = [
 export default function TeacherLayout() {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const { currentUser, logout } = useApp();
+  const { currentUser, logout, unreadCount } = useApp();
   const active = TABS.find(t => location.pathname.startsWith(t.path))?.id;
 
   return (
@@ -46,14 +46,27 @@ export default function TeacherLayout() {
         <aside className="top-0 sticky flex flex-col flex-shrink-0 bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 border-r w-56 lg:w-64 h-screen">
           {/* Logo */}
           <div className="flex-shrink-0 px-6 py-6 border-slate-100 dark:border-slate-700 border-b">
-            <div className="flex items-center gap-3">
-              <div className="flex justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl w-10 h-10">
-                <FaCoins className="text-white text-xl" />
+            <div className="flex justify-between items-center gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl w-10 h-10">
+                  <FaCoins className="text-white text-xl" />
+                </div>
+                <div>
+                  <p className="font-black text-slate-900 dark:text-white text-sm leading-tight">CoinEd</p>
+                  <p className="font-medium text-[10px] text-slate-400 dark:text-slate-400">Teacher Portal</p>
+                </div>
               </div>
-              <div>
-                <p className="font-black text-slate-900 dark:text-white text-sm leading-tight">CoinEd</p>
-                <p className="font-medium text-[10px] text-slate-400 dark:text-slate-400">Teacher Portal</p>
-              </div>
+              <button 
+                onClick={() => navigate('/notifications')}
+                className="relative hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-xl transition-colors"
+              >
+                <FaBell className="text-slate-600 dark:text-slate-300 text-lg" />
+                {unreadCount > 0 && (
+                  <span className="-top-1 -right-1 absolute bg-red-500 px-1.5 py-0.5 rounded-full min-w-[18px] font-bold text-[10px] text-white text-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
 

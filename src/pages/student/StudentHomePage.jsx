@@ -34,7 +34,7 @@ export default function StudentHomePage() {
       <div className="flex justify-between items-center">
         <div>
           <p className="font-semibold text-slate-500 dark:text-slate-400 text-xs">Welcome back,</p>
-          <h2 className="font-poppins font-black text-white text-2xl md:text-3xl">Hi, {fn} 👋</h2>
+          <h2 className="font-poppins font-black text-slate-900 dark:text-white text-2xl md:text-3xl">Hi, {fn} 👋</h2>
         </div>
         <div className="flex items-center gap-3">
           <Avatar user={currentUser} size={40} />
