@@ -135,3 +135,10 @@ export const chatAPI = {
   getUnreadCount: ()                => request('GET',   '/chat/unread'),
   getStudents: ()                   => request('GET',   '/chat/students'),
 };
+
+// ── Contact / Email Support ───────────────────────
+export const contactAPI = {
+  sendEmail: (name, email, subject, message) => 
+    request('POST', '/contact/email', { name, email, subject, message }),
+  getContactInfo: () => request('GET', '/contact'),
+};

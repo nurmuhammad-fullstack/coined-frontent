@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { Card, BackButton, SectionLabel } from "../components/ui";
+import { contactAPI } from "../services/api";
 import { 
   FaQuestionCircle, FaEnvelope, FaPhone, FaChevronDown, FaChevronUp,
   FaGraduationCap, FaCoins, FaShoppingCart, FaTrophy, FaClock, FaPaperPlane,
@@ -92,21 +93,24 @@ const CONTACT_OPTIONS = [
     label: "Email Support", 
     description: "Get help via email", 
     action: "support@coined.edu",
-    color: "bg-red-500" 
+    color: "bg-red-500",
+    type: "email"
   },
   { 
     icon: FaPhone, 
     label: "Phone Support", 
     description: "Mon-Fri, 9AM-5PM", 
     action: "+1 (555) 123-4567",
-    color: "bg-green-500" 
+    color: "bg-green-500",
+    type: "phone"
   },
   { 
     icon: FaComments, 
     label: "Live Chat", 
     description: "Chat with us now", 
     action: "Start Chat",
-    color: "bg-purple-500" 
+    color: "bg-purple-500",
+    type: "chat"
   },
 ];
 
@@ -125,14 +129,38 @@ export default function HelpSupportPage() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    // Simulate form submission
     setSubmitted(true);
-    setTimeout(() => {
+    try {
+      await contactAPI.sendEmail(
+        contactForm.name,
+        contactForm.email,
+        contactForm.subject,
+        contactForm.message
+      );
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setContactForm({ name: "", email: "", subject: "", message: "" });
+      }, 3000);
+    } catch (error) {
+      alert('Failed to send email. Please try again or email us directly at rahmatullayevnurmuhammad9@gmail.com');
       setSubmitted(false);
-      setContactForm({ name: "", email: "", subject: "", message: "" });
-    }, 3000);
+    }
+  };
+
+  const handleContactOptionClick = (option) => {
+    if (option.type === 'email') {
+      // Open email client with pre-filled recipient
+      window.location.href = `mailto:rahmatullayevnurmuhammad9@gmail.com?subject=CoinEd Support Request`;
+    } else if (option.type === 'phone') {
+      // Open phone dialer
+      window.location.href = `tel:${option.action}`;
+    } else if (option.type === 'chat') {
+      // Navigate to chat or show chat modal
+      navigate('/chat');
+    }
   };
 
   return (
@@ -251,6 +279,7 @@ export default function HelpSupportPage() {
             {CONTACT_OPTIONS.map((option, index) => (
               <button
                 key={index}
+                onClick={() => handleContactOptionClick(option)}
                 className="flex flex-col items-center gap-2 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md p-3 rounded-2xl transition-all"
               >
                 <div className={`w-10 h-10 ${option.color} rounded-xl flex items-center justify-center`}>

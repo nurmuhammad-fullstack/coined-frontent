@@ -4,34 +4,68 @@ let socket = null;
 
 // Get token from localStorage
 const getToken = () => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  return user.token || '';
+  try {
+    // Check for 'coined_token' first (used by authAPI)
+    const coinedToken = localStorage.getItem('coined_token');
+    if (coinedToken) return coinedToken;
+    
+    // Fallback to 'user' object (legacy)
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user.token || '';
+  } catch {
+    return '';
+  }
 };
 
 // Initialize socket connection
 export const initializeSocket = (token) => {
+  // If socket already exists and is connected, return it
   if (socket?.connected) {
     return socket;
   }
 
-  socket = io('http://localhost:5001', {
-    auth: {
-      token: token || getToken()
-    },
-    transports: ['websocket', 'polling']
-  });
+  // Disconnect existing socket if not connected
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
 
-  socket.on('connect', () => {
-    console.log('🔌 Socket connected!');
-  });
+  try {
+    socket = io('http://localhost:5001', {
+      auth: {
+        token: token || getToken()
+      },
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000,
+    });
 
-  socket.on('disconnect', () => {
-    console.log('🔌 Socket disconnected!');
-  });
+    socket.on('connect', () => {
+      console.log('🔌 Socket connected!');
+    });
 
-  socket.on('connect_error', (error) => {
-    console.error('Socket connection error:', error.message);
-  });
+    socket.on('disconnect', (reason) => {
+      console.log('🔌 Socket disconnected:', reason);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error.message);
+    });
+
+    // Handle reconnection
+    socket.on('reconnect', (attemptNumber) => {
+      console.log(`🔌 Socket reconnected after ${attemptNumber} attempts`);
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.error('🔌 Socket reconnection failed');
+    });
+
+  } catch (error) {
+    console.error('Failed to initialize socket:', error);
+  }
 
   return socket;
 };
