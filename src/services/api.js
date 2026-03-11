@@ -135,3 +135,10 @@ export const contactAPI = {
     request('POST', '/contact/email', { name, email, subject, message }),
   getContactInfo: () => request('GET', '/contact'),
 };
+
+// ── Schedule ─────────────────────────────────────
+export const scheduleAPI = {
+  getForClass:   (classId)   => request('GET',    `/schedule/${classId}`),
+  updateForClass:(classId, data) => request('PUT',  `/schedule/${classId}`, data),
+  getAll:        ()          => request('GET',    '/schedule'),
+};

@@ -1,6 +1,6 @@
 // src/context/AppContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { authAPI, studentsAPI, shopAPI, quizzesAPI, notificationsAPI, classesAPI } from "../services/api";
+import { authAPI, studentsAPI, shopAPI, quizzesAPI, notificationsAPI, classesAPI, scheduleAPI } from "../services/api";
 import { FaCoins } from "react-icons/fa";
 
 const AppContext = createContext(null);
@@ -287,6 +287,25 @@ export function AppProvider({ children }) {
     }
   };
 
+  // Schedule methods
+  const getScheduleForClass = async (classId) => {
+    try {
+      return await scheduleAPI.getForClass(classId);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  const updateScheduleForClass = async (classId, data) => {
+    try {
+      const res = await scheduleAPI.updateForClass(classId, data);
+      return { ok: true, schedule: res };
+    } catch (err) {
+      return { ok: false, message: err.message };
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center bg-slate-50 dark:bg-slate-900 min-h-screen">
@@ -298,7 +317,7 @@ export function AppProvider({ children }) {
     );
   }
 
-  return (
+return (
     <AppContext.Provider value={{
       currentUser, login, logout, updateCurrentUser, uploadAvatar,
       students, setStudents,
@@ -318,6 +337,7 @@ export function AppProvider({ children }) {
       loadNotifications, markNotificationAsRead, markAllNotificationsAsRead, clearAllNotifications,
       toast, showToast,
       darkMode, toggleDarkMode,
+      getScheduleForClass, updateScheduleForClass,
     }}>
       {children}
     </AppContext.Provider>

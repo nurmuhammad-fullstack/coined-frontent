@@ -30,6 +30,7 @@ import TeacherQuizzesPage         from "./pages/teacher/TeacherQuizzesPage";
 import TeacherQuizResultsPage     from "./pages/teacher/TeacherQuizResultsPage";
 import TeacherClassesPage         from "./pages/teacher/TeacherClassesPage";
 import TeacherAnalyticsPage       from "./pages/teacher/TeacherAnalyticsPage";
+import TeacherSchedulePage        from "./pages/teacher/TeacherSchedulePage";
 
 export default function App() {
 return (
@@ -87,7 +88,8 @@ return (
             <Route path="quizzes/:id"      element={<TeacherQuizResultsPage   />} />
             <Route path="students/:id"     element={<TeacherStudentDetailPage />} />
             <Route path="shop"             element={<TeacherShopPage          />} />
-            <Route path="analytics"       element={<TeacherAnalyticsPage    />} />
+<Route path="analytics"       element={<TeacherAnalyticsPage    />} />
+            <Route path="schedule"        element={<TeacherSchedulePage />} />
             <Route path="profile"          element={<TeacherProfilePage       />} />
             <Route path="help"             element={<HelpSupportPage        />} />
           </Route>

@@ -2,11 +2,12 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
-import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt, FaBell, FaSchool, FaChartLine, FaQuestionCircle, FaCommentDots } from "react-icons/fa";
+import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt, FaBell, FaSchool, FaChartLine, FaQuestionCircle, FaCommentDots, FaClock } from "react-icons/fa";
 
 const TABS = [
   { id: "students", label: "Students", icon: FaUsers,  path: "/teacher/students" },
   { id: "classes", label: "Classes", icon: FaSchool,  path: "/teacher/classes" },
+  { id: "schedule", label: "Schedule", icon: FaClock, path: "/teacher/schedule" },
   { id: "quizzes",  label: "Quizzes",  icon: FaClipboardList,  path: "/teacher/quizzes"  },
   { id: "shop",     label: "Shop",     icon: FaStore,     path: "/teacher/shop"     },
   { id: "analytics", label: "Analytics", icon: FaChartLine, path: "/teacher/analytics" },
