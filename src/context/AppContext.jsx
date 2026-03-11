@@ -6,32 +6,27 @@ import { FaCoins } from "react-icons/fa";
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
-  const [currentUser, setCurrentUser]   = useState(null);
-  const [students, setStudents]         = useState([]);
-  const [shopItems, setShopItems]       = useState([]);
-  const [transactions, setTransactions] = useState({});
-  const [quizzes, setQuizzes]           = useState([]);
+  const [currentUser, setCurrentUser]     = useState(null);
+  const [students, setStudents]           = useState([]);
+  const [shopItems, setShopItems]         = useState([]);
+  const [transactions, setTransactions]   = useState({});
+  const [quizzes, setQuizzes]             = useState([]);
   const [quizzesLoaded, setQuizzesLoaded] = useState(false);
-  const [quizAttempts, setQuizAttempts] = useState([]);
+  const [quizAttempts, setQuizAttempts]   = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount]   = useState(0);
-  const [classes, setClasses]           = useState([]);
-  const [toast, setToast]               = useState(null);
-  const [loading, setLoading]           = useState(true);
-  
-  // Dark mode state with localStorage persistence
+  const [unreadCount, setUnreadCount]     = useState(0);
+  const [classes, setClasses]             = useState([]);
+  const [toast, setToast]                 = useState(null);
+  const [loading, setLoading]             = useState(true);
+
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem("coined_dark_mode");
     return saved ? JSON.parse(saved) : false;
   });
 
-  // Apply dark mode class to document and save to localStorage
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    if (darkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
     localStorage.setItem("coined_dark_mode", JSON.stringify(darkMode));
   }, [darkMode]);
 
@@ -51,49 +46,34 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     if (currentUser?.role === "teacher") {
-      studentsAPI.getAllForStudents().then(setStudents).catch(console.error);
+      // ✅ Teacher — barcha studentlarni ko'radi
+      studentsAPI.getAll().then(setStudents).catch(console.error);
       shopAPI.getAll().then(setShopItems).catch(console.error);
       quizzesAPI.getAll().then((data) => { setQuizzes(data); setQuizzesLoaded(true); }).catch(console.error);
       classesAPI.getAll().then(setClasses).catch(console.error);
     }
     if (currentUser?.role === "student") {
-      // Use leaderboard endpoint for students (no teacher required)
       studentsAPI.getLeaderboard().then(setStudents).catch(console.error);
       shopAPI.getAll().then(setShopItems).catch(console.error);
       quizzesAPI.getAll().then((data) => { setQuizzes(data); setQuizzesLoaded(true); }).catch(console.error);
       classesAPI.getForStudent().then(setClasses).catch(console.error);
       quizzesAPI.myAttempts().then(setQuizAttempts).catch(console.error);
-      // Load student transactions
       studentsAPI.getTransactions(currentUser._id)
         .then(txs => setTransactions(prev => ({ ...prev, [currentUser._id]: txs })))
         .catch(console.error);
     }
-}, [currentUser]);
+  }, [currentUser]);
 
-  // Load notifications when user is logged in
   useEffect(() => {
     if (currentUser) {
-      notificationsAPI.getAll()
-        .then(setNotifications)
-        .catch(console.error);
-      notificationsAPI.getUnreadCount()
-        .then(data => setUnreadCount(data.count))
-        .catch(console.error);
+      notificationsAPI.getAll().then(setNotifications).catch(console.error);
+      notificationsAPI.getUnreadCount().then(data => setUnreadCount(data.count)).catch(console.error);
     }
   }, [currentUser]);
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 2800);
-  };
-
-  // Error handler for background API calls (shows toast only once to avoid spam)
-  const handleBackgroundError = (error, defaultMessage) => {
-    console.error(defaultMessage, error);
-    // Only show toast if it's a critical error (not network issues on load)
-    if (error?.message && !error.message.includes('network')) {
-      showToast(`❌ ${defaultMessage}: ${error.message}`, "error");
-    }
   };
 
   const login = async (email, password) => {
@@ -119,8 +99,7 @@ export function AppProvider({ children }) {
 
   const updateCurrentUser = async (data) => {
     try {
-      const updatedUser = await authAPI.updateProfile(data);
-      // Fetch fresh user data to ensure we have latest avatar
+      await authAPI.updateProfile(data);
       const freshUser = await authAPI.me();
       setCurrentUser(freshUser);
       return { ok: true };
@@ -131,8 +110,7 @@ export function AppProvider({ children }) {
 
   const uploadAvatar = async (file) => {
     try {
-      const result = await authAPI.uploadAvatar(file);
-      // Fetch fresh user data to get updated avatar URL from server
+      await authAPI.uploadAvatar(file);
       const freshUser = await authAPI.me();
       setCurrentUser(freshUser);
       return { ok: true, avatar: freshUser.avatar };
@@ -147,7 +125,6 @@ export function AppProvider({ children }) {
       setStudents(prev => [...prev, res.user || res]);
       return { ok: true, user: res.user || res };
     } catch (err) {
-      console.error('Create student error:', err);
       return { ok: false, message: err.message || "Failed to create student" };
     }
   };
@@ -158,7 +135,6 @@ export function AppProvider({ children }) {
       setStudents(prev => prev.filter(s => s._id !== studentId));
       return { ok: true };
     } catch (err) {
-      console.error('Delete student error:', err);
       return { ok: false, message: err.message || "Failed to delete student" };
     }
   };
@@ -173,7 +149,6 @@ export function AppProvider({ children }) {
       }));
       return { ok: true };
     } catch (err) {
-      console.error('Add coins error:', err);
       return { ok: false, message: err.message || "Failed to add coins" };
     }
   };
@@ -188,7 +163,6 @@ export function AppProvider({ children }) {
       }));
       return { ok: true };
     } catch (err) {
-      console.error('Remove coins error:', err);
       return { ok: false, message: err.message || "Failed to remove coins" };
     }
   };
@@ -248,7 +222,6 @@ export function AppProvider({ children }) {
     setQuizzes(prev => prev.filter(q => (q._id || q.id) !== id));
   };
 
-  // timeTaken ham yuboriladi backend ga
   const submitQuizAttempt = async (quizId, answers, timeTaken = 0) => {
     const res = await quizzesAPI.submitAttempt(quizId, answers, timeTaken);
     setQuizAttempts(prev => [...prev, res.attempt || res]);
@@ -258,7 +231,6 @@ export function AppProvider({ children }) {
     return res;
   };
 
-  // Class Management
   const createClass = async (data) => {
     const res = await classesAPI.create(data);
     setClasses(prev => [...prev, res]);
@@ -276,7 +248,6 @@ export function AppProvider({ children }) {
     setClasses(prev => prev.filter(c => (c._id || c.id) !== id));
   };
 
-  // Notification helpers
   const loadNotifications = async () => {
     try {
       const data = await notificationsAPI.getAll();
@@ -320,9 +291,7 @@ export function AppProvider({ children }) {
     return (
       <div className="flex justify-center items-center bg-slate-50 dark:bg-slate-900 min-h-screen">
         <div className="text-center">
-          <div className="mb-3 text-5xl animate-bounce">
-            <FaCoins />
-          </div>
+          <div className="mb-3 text-5xl animate-bounce"><FaCoins /></div>
           <p className="font-bold text-slate-500 dark:text-slate-400">Loading CoinEd...</p>
         </div>
       </div>
