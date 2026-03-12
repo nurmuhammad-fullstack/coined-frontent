@@ -311,7 +311,7 @@ export function AppProvider({ children }) {
       <div className="flex justify-center items-center bg-slate-50 dark:bg-slate-900 min-h-screen">
         <div className="text-center">
           <div className="mb-3 text-5xl animate-bounce"><FaCoins /></div>
-          <p className="font-bold text-slate-500 dark:text-slate-400">Loading CoinEd...</p>
+          <p className="font-bold text-slate-500 dark:text-slate-400">Loading DevUp...</p>
         </div>
       </div>
     );

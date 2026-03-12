@@ -88,8 +88,8 @@ export default function TermsPage() {
                 <h2 className="font-bold text-slate-800 dark:text-white text-lg">3. Intellectual Property</h2>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                The content on CoinEd, including but not limited to text, graphics, logos, images, audio clips, 
-                video clips, and software, is the property of CoinEd and is protected by copyright laws. 
+                The content on DevUp, including but not limited to text, graphics, logos, images, audio clips, 
+                video clips, and software, is the property of DevUp and is protected by copyright laws. 
                 Unauthorized use of any content from this website is strictly prohibited.
               </p>
             </div>
@@ -173,7 +173,7 @@ export default function TermsPage() {
           {/* Footer */}
           <div className="py-4 text-center">
             <p className="text-slate-400 dark:text-slate-500 text-xs">
-              © 2025 CoinEd. All rights reserved.
+              © 2025 DevUp. All rights reserved.
             </p>
           </div>
         </div>

@@ -15,8 +15,8 @@ const FAQS = [
     icon: FaQuestionCircle,
     questions: [
       {
-        q: "What is CoinEd?",
-        a: "CoinEd is an educational platform where students earn coins by completing quizzes and tasks. These coins can be used to purchase rewards from the shop."
+        q: "What is DevUp?",
+        a: "DevUp is an educational platform where students earn coins by completing quizzes and tasks. These coins can be used to purchase rewards from the shop."
       },
       {
         q: "How do I earn coins?",
@@ -92,7 +92,7 @@ const CONTACT_OPTIONS = [
     icon: FaEnvelope, 
     label: "Email Support", 
     description: "Get help via email", 
-    action: "support@coined.edu",
+    action: "support@devup.edu",
     color: "bg-red-500",
     type: "email"
   },
@@ -153,7 +153,7 @@ export default function HelpSupportPage() {
   const handleContactOptionClick = (option) => {
     if (option.type === 'email') {
       // Open email client with pre-filled recipient
-      window.location.href = `mailto:rahmatullayevnurmuhammad9@gmail.com?subject=CoinEd Support Request`;
+      window.location.href = `mailto:rahmatullayevnurmuhammad9@gmail.com?subject=DevUp Support Request`;
     } else if (option.type === 'phone') {
       // Open phone dialer
       window.location.href = `tel:${option.action}`;
@@ -389,7 +389,7 @@ export default function HelpSupportPage() {
       {/* Footer */}
       <div className="py-4 text-center">
         <p className="text-slate-400 dark:text-slate-500 text-xs">
-          © 2025 CoinEd. All rights reserved.
+          © 2025 DevUp. All rights reserved.
         </p>
         <div className="flex justify-center gap-3 mt-2">
           <Link to="/terms" className="text-slate-400 hover:text-brand-500 dark:text-slate-500 text-xs transition-colors">

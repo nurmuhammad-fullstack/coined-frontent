@@ -2,6 +2,7 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
+import { DevUpLogo } from "../../components/DevUpLogo";
 import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt, FaBell, FaSchool, FaChartLine, FaQuestionCircle, FaCommentDots, FaClock } from "react-icons/fa";
 
 const TABS = [
@@ -53,11 +54,9 @@ export default function TeacherLayout() {
           <div className="flex-shrink-0 px-6 py-6 border-slate-100 dark:border-slate-700 border-b">
             <div className="flex justify-between items-center gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl w-10 h-10">
-                  <FaCoins className="text-white text-xl" />
-                </div>
+                <DevUpLogo size={80} />
                 <div>
-                  <p className="font-black text-slate-900 dark:text-white text-sm leading-tight">CoinEd</p>
+                  <p className="font-black text-slate-900 dark:text-white text-sm leading-tight">DevUp</p>
                   <p className="font-medium text-[10px] text-slate-400 dark:text-slate-400">Teacher Portal</p>
                 </div>
               </div>
@@ -118,4 +117,3 @@ export default function TeacherLayout() {
     </>
   );
 }
-

@@ -39,7 +39,7 @@ export default function LoginPage() {
           {/* Logo */}
 
           <h2 className="mb-1 font-poppins font-bold text-slate-800 dark:text-white text-2xl text-center">Welcome Back</h2>
-          <p className="mb-6 text-slate-500 dark:text-slate-400 text-sm text-center">Sign in to continue to CoinEd</p>
+          <p className="mb-6 text-slate-500 dark:text-slate-400 text-sm text-center">Sign in to continue to DevUp</p>
 
           {/* Role toggle */}
           <div className="flex bg-slate-100 dark:bg-slate-700/50 mb-6 p-1.5 rounded-2xl">

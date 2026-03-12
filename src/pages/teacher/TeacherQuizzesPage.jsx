@@ -97,9 +97,9 @@
         ) : (
           <div className="gap-3 grid grid-cols-1 md:grid-cols-2">
             {quizzes.map((quiz,i)=>(
-              <div key={quiz._id} className="group bg-white dark:bg-slate-800 p-5 border border-slate-100 hover:border-indigo-200 dark:border-slate-700 dark:hover:border-indigo-500 rounded-2xl transition-all">
+              <div key={quiz._id} className="group bg-white dark:bg-slate-800 shadow-sm hover:shadow-md hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 p-5 rounded-2xl transition-all">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="flex flex-shrink-0 justify-center items-center bg-indigo-50 dark:bg-indigo-900/30 group-hover:bg-indigo-500 rounded-xl w-10 h-10 font-black text-[13px] text-indigo-400 group-hover:text-white transition-colors">
+                  <div className="flex flex-shrink-0 justify-center items-center bg-brand-50 dark:bg-brand-900/30 group-hover:bg-brand-500 rounded-xl w-10 h-10 font-black text-[13px] text-brand-400 group-hover:text-white transition-colors">
                     {String(i+1).padStart(2,"0")}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -113,13 +113,13 @@
                       {quiz.subject && <span>{quiz.subject}</span>}
                       {quiz.class   && <span>Class {quiz.class}</span>}
                       <span>{quiz.questions?.length} savol</span>
-                      <span className="font-bold text-violet-500">🪙 {quiz.maxCoins} max</span>
+                      <span className="font-bold text-brand-500">🪙 {quiz.maxCoins} max</span>
                     </div>
                   </div>
                 </div>
                 <div className="gap-2 grid grid-cols-3">
                   <button onClick={()=>navigate(`/teacher/quizzes/${quiz._id}`)}
-                    className="col-span-1 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-800 py-2 border-none rounded-xl font-bold text-[11px] text-indigo-600 dark:text-indigo-400 transition-colors cursor-pointer">
+                    className="col-span-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/30 dark:hover:bg-brand-800 py-2 border-none rounded-xl font-bold text-[11px] text-brand-600 dark:text-brand-400 transition-colors cursor-pointer">
                     📊 Results
                   </button>
                   <button onClick={()=>handleToggle(quiz._id)}

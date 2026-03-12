@@ -152,7 +152,7 @@ export default function TeacherStudentsPage() {
           <div className="gap-3 grid grid-cols-1 md:grid-cols-2">
             {filtered.map((s, i) => (
               <div key={s._id} onClick={() => navigate("/teacher/students/" + s._id)}
-                className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 border border-transparent hover:border-slate-100 dark:hover:border-slate-700 rounded-2xl transition-all cursor-pointer">
+                className="flex items-center gap-3 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 p-4 rounded-2xl transition-all cursor-pointer">
                 <span className="w-7 font-black text-base text-center">{medals[i] || "#" + (i+1)}</span>
                 <Avatar user={s} size={44} />
                 <div className="flex-1 min-w-0">

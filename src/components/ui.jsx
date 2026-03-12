@@ -67,9 +67,9 @@ export function Modal({ onClose, children }) {
   }, [onClose]);
 
   return (
-    <div className="z-50 fixed inset-0 flex justify-center items-end bg-black/50 animate-fade-in" onClick={onClose}>
+    <div className="z-50 fixed inset-0 flex justify-center items-end md:items-center bg-black/60 backdrop-blur-sm animate-fade-in" onClick={onClose}>
       <div
-        className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg overflow-y-auto animate-slide-up"
+        className="bg-white dark:bg-slate-800 shadow-2xl shadow-slate-900/20 md:rounded-3xl rounded-t-3xl w-full max-w-lg overflow-y-auto animate-slide-up"
         style={{ maxHeight: "85vh", paddingBottom: "env(safe-area-inset-bottom, 20px)" }}
         onClick={e => e.stopPropagation()}
       >

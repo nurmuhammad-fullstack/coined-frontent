@@ -2,6 +2,7 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
+import { DevUpLogo } from "../../components/DevUpLogo";
 import { FaHome, FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaCoins, FaGraduationCap, FaSignOutAlt, FaBell, FaQuestionCircle, FaCommentDots } from "react-icons/fa";
 
 const TABS = [
@@ -55,11 +56,9 @@ export default function StudentLayout() {
           <div className="px-6 py-8 border-slate-100 dark:border-slate-700 border-b">
             <div className="flex justify-between items-center gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex justify-center items-center bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl w-10 h-10">
-                  <FaCoins className="text-white text-xl" />
-                </div>
+                <DevUpLogo size={100} />
                 <div>
-                  <p className="font-poppins font-black text-slate-800 dark:text-white text-lg leading-none">CoinEd</p>
+                  <p className="font-poppins font-black text-slate-800 dark:text-white text-lg leading-none">DevUp</p>
                   <p className="font-medium text-slate-400 dark:text-slate-500 text-xs">Student Portal</p>
                 </div>
               </div>

@@ -126,17 +126,17 @@ export default function TeacherSchedulePage() {
             <button
               key={cls._id}
               onClick={() => setSelectedClass(cls)}
-              className={`p-4 border-2 rounded-2xl text-left transition-all ${
+              className={`p-4 rounded-2xl text-left transition-all shadow-sm hover:shadow-md ${
                 selectedClass?._id === cls._id
-                  ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-brand-300'
+                  ? 'bg-brand-50 dark:bg-brand-900/30 ring-2 ring-brand-500'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50'
               }`}
             >
               <div className="flex items-center gap-2">
-                <FaSchool className={selectedClass?._id === cls._id ? 'text-brand-500' : 'text-slate-400'} />
+                <FaSchool className={selectedClass?._id === cls._id ? 'text-brand-500' : 'text-slate-400 dark:text-slate-500'} />
                 <span className="font-bold text-slate-700 dark:text-slate-200">{cls.name}</span>
               </div>
-              <p className="mt-1 text-slate-400 text-xs">{cls.studentCount || 0} o'quvchi</p>
+              <p className="mt-1 text-slate-400 dark:text-slate-500 text-xs">{cls.studentCount || 0} o'quvchi</p>
             </button>
           ))}
         </div>
@@ -144,10 +144,10 @@ export default function TeacherSchedulePage() {
 
       {/* Schedule Settings */}
       {selectedClass && !loading && (
-        <div className="bg-white dark:bg-slate-800 p-5 border-2 border-slate-200 dark:border-slate-700 rounded-2xl">
+        <div className="bg-white dark:bg-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 p-6 rounded-2xl">
           <div className="flex justify-between items-center mb-5">
             <h3 className="flex items-center gap-2 font-bold text-slate-800 dark:text-white text-lg">
-              <FaCalendarAlt /> {selectedClass.name} - Jadval
+              <FaCalendarAlt className="text-brand-500" /> {selectedClass.name} - Jadval
             </h3>
             {schedule?.enabled && (
               <span className="bg-green-100 dark:bg-green-900/30 px-3 py-1 rounded-full font-bold text-green-600 dark:text-green-400 text-xs">
