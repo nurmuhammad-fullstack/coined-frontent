@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
 import { DevUpLogo } from "../../components/DevUpLogo";
-import { FaHome, FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaCoins, FaGraduationCap, FaSignOutAlt, FaBell, FaQuestionCircle, FaCommentDots } from "react-icons/fa";
+import { FaHome, FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaSignOutAlt, FaBell, FaQuestionCircle, FaCommentDots } from "react-icons/fa";
 
 const TABS = [
   { id: "home",    label: "Home",    icon: FaHome,    path: "/student/home"    },
@@ -122,4 +122,3 @@ export default function StudentLayout() {
     </>
   );
 }
-

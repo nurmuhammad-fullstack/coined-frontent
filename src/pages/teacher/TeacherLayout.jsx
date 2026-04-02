@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
 import { DevUpLogo } from "../../components/DevUpLogo";
-import { FaUsers, FaClipboardList, FaStore, FaUser, FaCoins, FaChalkboardTeacher, FaSignOutAlt, FaBell, FaSchool, FaChartLine, FaQuestionCircle, FaCommentDots, FaClock } from "react-icons/fa";
+import { FaUsers, FaClipboardList, FaStore, FaUser, FaSignOutAlt, FaBell, FaSchool, FaChartLine, FaQuestionCircle, FaCommentDots, FaClock } from "react-icons/fa";
 
 const TABS = [
   { id: "students", label: "Students", icon: FaUsers,  path: "/teacher/students" },

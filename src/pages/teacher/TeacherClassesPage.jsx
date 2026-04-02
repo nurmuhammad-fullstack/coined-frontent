@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Modal, SectionLabel } from "../../components/ui";
-import { FaPlus, FaUsers, FaEdit, FaTrash, FaCheck, FaTimes, FaSchool, FaSearch, FaSortAmountDown, FaArrowUp, FaArrowDown, FaUserGraduate, FaClock } from "react-icons/fa";
+import { FaPlus, FaUsers, FaEdit, FaTrash, FaCheck, FaTimes, FaSchool, FaSearch, FaSortAmountDown, FaUserGraduate, FaClock } from "react-icons/fa";
 
 const BLANK = { name: "", description: "" };
 
@@ -415,4 +415,3 @@ export default function TeacherClassesPage() {
     </div>
   );
 }
-

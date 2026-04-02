@@ -5,8 +5,6 @@ import { Avatar, BackButton } from "../components/ui";
 import { chatAPI } from "../services/api";
 import {
   initializeSocket,
-  getSocket,
-  disconnectSocket,
   joinConversation,
   leaveConversation,
   sendTypingStart,
@@ -26,7 +24,7 @@ import {
 } from "react-icons/fa";
 
 export default function ChatPage() {
-  const { currentUser, showToast, students } = useApp();
+  const { currentUser, showToast } = useApp();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -39,7 +37,6 @@ export default function ChatPage() {
   const [allStudents, setAllStudents] = useState([]);
   const [typingUsers, setTypingUsers] = useState({});
   const [onlineUsers, setOnlineUsers] = useState(new Set());
-  const [pagination, setPagination] = useState({ page: 1, pages: 1 });
   const messagesEndRef = useRef(null);
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -47,6 +44,46 @@ export default function ChatPage() {
   const isTypingRef = useRef(false);
 
   const isTeacher = currentUser?.role === "teacher";
+  const currentUserId = currentUser?._id;
+  const selectedConversationId = selectedConversation?._id;
+  const selectedPartnerId = selectedConversation?.participants?.[0]?._id;
+
+  const loadConversations = useCallback(async () => {
+    try {
+      const data = await chatAPI.getConversations();
+      setConversations(data);
+    } catch (err) {
+      console.error("Failed to load conversations:", err);
+      showToast("❌ Failed to load conversations", "error");
+    }
+  }, [showToast]);
+
+  const loadMessages = useCallback(
+    async (conversationId, page = 1) => {
+      if (!conversationId) return;
+      if (page === 1) setLoadingMessages(true);
+      try {
+        const data = await chatAPI.getMessages(conversationId, page);
+        if (page === 1) {
+          setMessages(data.messages);
+        } else {
+          setMessages((prev) => [...data.messages, ...prev]);
+        }
+      } catch (err) {
+        if (page === 1) showToast("❌ Failed to load messages", "error");
+      } finally {
+        if (page === 1) setLoadingMessages(false);
+      }
+    },
+    [showToast]
+  );
+
+  const handleTypingStop = useCallback(() => {
+    if (isTypingRef.current && selectedConversationId) {
+      isTypingRef.current = false;
+      sendTypingStop(selectedConversationId, selectedPartnerId);
+    }
+  }, [selectedConversationId, selectedPartnerId]);
 
   // Initialize socket connection
   useEffect(() => {
@@ -57,11 +94,11 @@ export default function ChatPage() {
       // Listen for new messages
       socket.on("message:new", ({ message, conversationId }) => {
         // Check if message belongs to current conversation (handle both old and new format)
-        const currentConvId = selectedConversation?._id;
+        const currentConvId = selectedConversationId;
         const msgConvId = conversationId;
         
         // Check by participant ID as fallback
-        const msgPartnerId = message.sender?._id === currentUser?._id 
+        const msgPartnerId = message.sender?._id === currentUserId 
           ? message.receiver?._id 
           : message.sender?._id;
         
@@ -79,7 +116,7 @@ export default function ChatPage() {
 
       // Listen for typing events
       socket.on("typing:start", ({ userId, userName, conversationId }) => {
-        if (selectedConversation?._id === conversationId && userId !== currentUser?._id) {
+        if (selectedConversationId === conversationId && userId !== currentUserId) {
           setTypingUsers((prev) => ({
             ...prev,
             [conversationId]: userName,
@@ -88,7 +125,7 @@ export default function ChatPage() {
       });
 
       socket.on("typing:stop", ({ userId, conversationId }) => {
-        if (selectedConversation?._id === conversationId) {
+        if (selectedConversationId === conversationId) {
           setTypingUsers((prev) => {
             const newTyping = { ...prev };
             delete newTyping[conversationId];
@@ -148,7 +185,7 @@ export default function ChatPage() {
         socket.off("message:read");
       };
     }
-  }, [currentUser?._id, selectedConversation?._id]);
+  }, [currentUserId, selectedConversationId, loadConversations]);
 
   // Load all students for chat dropdown
   useEffect(() => {
@@ -166,24 +203,24 @@ export default function ChatPage() {
   // Load conversations on mount
   useEffect(() => {
     loadConversations();
-  }, []);
+  }, [loadConversations]);
 
   // Join conversation room when selected
   useEffect(() => {
-    if (selectedConversation?._id) {
-      joinConversation(selectedConversation._id);
-      loadMessages(selectedConversation._id);
+    if (selectedConversationId) {
+      joinConversation(selectedConversationId);
+      loadMessages(selectedConversationId);
       // Mark as read
-      chatAPI.markConversationRead(selectedConversation._id).catch((err) => {
+      chatAPI.markConversationRead(selectedConversationId).catch((err) => {
         console.error("Failed to mark conversation as read:", err);
       });
     }
     return () => {
-      if (selectedConversation?._id) {
-        leaveConversation(selectedConversation._id);
+      if (selectedConversationId) {
+        leaveConversation(selectedConversationId);
       }
     };
-  }, [selectedConversation?._id]);
+  }, [selectedConversationId, loadMessages]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -201,44 +238,13 @@ export default function ChatPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const loadConversations = async () => {
-    try {
-      const data = await chatAPI.getConversations();
-      setConversations(data);
-    } catch (err) {
-      console.error("Failed to load conversations:", err);
-      showToast("❌ Failed to load conversations", "error");
-    }
-  };
-
-  const loadMessages = async (conversationId, page = 1) => {
-    if (!conversationId) return;
-    if (page === 1) setLoadingMessages(true);
-    try {
-      const data = await chatAPI.getMessages(conversationId, page);
-      if (page === 1) {
-        setMessages(data.messages);
-      } else {
-        setMessages((prev) => [...data.messages, ...prev]);
-      }
-      setPagination(data.pagination);
-    } catch (err) {
-      if (page === 1) showToast("❌ Failed to load messages", "error");
-    } finally {
-      if (page === 1) setLoadingMessages(false);
-    }
-  };
-
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedConversation) return;
+    if (!newMessage.trim() || !selectedConversationId) return;
 
     setLoading(true);
     try {
-      const message = await chatAPI.sendMessage(
-        selectedConversation._id,
-        newMessage
-      );
+      await chatAPI.sendMessage(selectedConversationId, newMessage);
       // Don't add to messages here - the socket event will handle it
       // This prevents duplicate messages
       setNewMessage("");
@@ -252,6 +258,29 @@ export default function ChatPage() {
       setLoading(false);
     }
   };
+
+  const handleTyping = useCallback(
+    (text) => {
+      setNewMessage(text);
+
+      // Send typing indicator
+      if (!isTypingRef.current && selectedConversationId) {
+        isTypingRef.current = true;
+        sendTypingStart(selectedConversationId, selectedPartnerId);
+      }
+
+      // Clear typing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      // Stop typing after 2 seconds of no input
+      typingTimeoutRef.current = setTimeout(() => {
+        handleTypingStop();
+      }, 2000);
+    },
+    [handleTypingStop, selectedConversationId, selectedPartnerId]
+  );
 
   const handleStartConversation = async (student) => {
     try {
@@ -272,42 +301,6 @@ export default function ChatPage() {
       loadConversations();
     } catch (err) {
       showToast("❌ Failed to start conversation", "error");
-    }
-  };
-
-  const handleTyping = useCallback(
-    (text) => {
-      setNewMessage(text);
-
-      // Send typing indicator
-      if (!isTypingRef.current && selectedConversation?._id) {
-        isTypingRef.current = true;
-        sendTypingStart(
-          selectedConversation._id,
-          selectedConversation.participants?.[0]?._id
-        );
-      }
-
-      // Clear typing timeout
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-
-      // Stop typing after 2 seconds of no input
-      typingTimeoutRef.current = setTimeout(() => {
-        handleTypingStop();
-      }, 2000);
-    },
-    [selectedConversation]
-  );
-
-  const handleTypingStop = () => {
-    if (isTypingRef.current && selectedConversation?._id) {
-      isTypingRef.current = false;
-      sendTypingStop(
-        selectedConversation._id,
-        selectedConversation.participants?.[0]?._id
-      );
     }
   };
 
@@ -704,4 +697,3 @@ export default function ChatPage() {
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
 // src/pages/student/StudentQuizPage.jsx
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 
@@ -11,7 +11,7 @@ export default function StudentQuizPage() {
   const { currentUser, quizzes, quizAttempts, submitQuizAttempt } = useApp();
 
   const quiz      = quizzes?.find(q => (q._id || q.id) === id);
-  const questions = quiz?.questions || [];
+  const questions = useMemo(() => quiz?.questions || [], [quiz]);
   const totalQ    = questions.length;
 
   const [phase, setPhase]           = useState(null); // null = hali aniqlanmagan
@@ -56,6 +56,38 @@ export default function StudentQuizPage() {
     }
   }, [quiz, quizAttempts, id, currentUser, totalQ]);
 
+  const handleSubmit = useCallback(async (finalAnswers) => {
+    if (submitting) return;
+    setSubmitting(true);
+    const timeTaken = startTimeRef.current
+      ? Math.round((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+    try {
+      const res = await submitQuizAttempt(id, finalAnswers, timeTaken);
+      setResult(res);
+      // To'g'ri javoblarni saqlash
+      if (res.correctAnswers) {
+        setCorrectAnswers(res.correctAnswers);
+      }
+      setPhase("result"); // ✅ to'g'ridan result ga o'tadi
+    } catch (err) {
+      if (err.message?.includes("Already completed")) {
+        setPhase("already");
+        return;
+      }
+      let correct = 0;
+      finalAnswers.forEach((ans, i) => {
+        if (questions[i] && Number(ans) === Number(questions[i].correct)) correct++;
+      });
+      const score = Math.round((correct / totalQ) * 100);
+      const coinsEarned = Math.round((quiz?.maxCoins || 20) * score / 100);
+      setResult({ score, correct, total: totalQ, coinsEarned });
+      setPhase("result");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [id, questions, quiz, submitQuizAttempt, submitting, totalQ]);
+
   // Timer
   useEffect(() => {
     if (phase !== "quiz") return;
@@ -63,7 +95,7 @@ export default function StudentQuizPage() {
     if (timeLeft <= 0) { handleSubmit(answers); return; }
     const t = setInterval(() => setTimeLeft(p => p - 1), 1000);
     return () => clearInterval(t);
-  }, [phase, timeLeft]);
+  }, [answers, handleSubmit, phase, timeLeft]);
 
   const formatTime = (s) =>
     `${String(Math.floor(s / 60)).padStart(2,"0")}:${String(s % 60).padStart(2,"0")}`;
@@ -95,38 +127,6 @@ export default function StudentQuizPage() {
       }
     }, 800);
   };
-
-  const handleSubmit = useCallback(async (finalAnswers) => {
-    if (submitting) return;
-    setSubmitting(true);
-    const timeTaken = startTimeRef.current
-      ? Math.round((Date.now() - startTimeRef.current) / 1000)
-      : 0;
-    try {
-      const res = await submitQuizAttempt(id, finalAnswers, timeTaken);
-      setResult(res);
-      // To'g'ri javoblarni saqlash
-      if (res.correctAnswers) {
-        setCorrectAnswers(res.correctAnswers);
-      }
-      setPhase("result"); // ✅ to'g'ridan result ga o'tadi
-    } catch (err) {
-      if (err.message?.includes("Already completed")) {
-        setPhase("already");
-        return;
-      }
-      let correct = 0;
-      finalAnswers.forEach((ans, i) => {
-        if (questions[i] && Number(ans) === Number(questions[i].correct)) correct++;
-      });
-      const score = Math.round((correct / totalQ) * 100);
-      const coinsEarned = Math.round((quiz?.maxCoins || 20) * score / 100);
-      setResult({ score, correct, total: totalQ, coinsEarned });
-      setPhase("result");
-    } finally {
-      setSubmitting(false);
-    }
-  }, [id, submitting, submitQuizAttempt, questions, totalQ, quiz]);
 
   // LOADING
   if (!phase || !quiz) return (

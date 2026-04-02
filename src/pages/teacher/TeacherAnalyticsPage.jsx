@@ -1,8 +1,8 @@
 // src/pages/teacher/TeacherAnalyticsPage.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useApp } from "../../context/AppContext";
 import { analyticsAPI } from "../../services/api";
-import { Avatar, SectionLabel, Modal } from "../../components/ui";
+import { Avatar, SectionLabel } from "../../components/ui";
 import { 
   FaUsers, FaClipboardList, FaCoins, FaStore, FaChartLine, FaChartBar,
   FaTrophy, FaClock, FaCheckCircle, FaArrowUp, FaArrowDown, FaShoppingCart,
@@ -19,11 +19,7 @@ export default function TeacherAnalyticsPage() {
   const [shopStats, setShopStats] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  useEffect(() => {
-    loadAnalytics();
-  }, []);
-
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     setLoading(true);
     try {
       const [overviewData, quizData, studentData, coinData, shopData] = await Promise.all([
@@ -43,7 +39,11 @@ export default function TeacherAnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
 
   if (loading) {
     return (
@@ -525,4 +525,3 @@ export default function TeacherAnalyticsPage() {
     </div>
   );
 }
-

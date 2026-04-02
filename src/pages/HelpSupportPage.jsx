@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useApp } from "../context/AppContext";
-import { Card, BackButton, SectionLabel } from "../components/ui";
+import { Card, BackButton } from "../components/ui";
 import { contactAPI } from "../services/api";
 import { 
-  FaQuestionCircle, FaEnvelope, FaPhone, FaChevronDown, FaChevronUp,
-  FaGraduationCap, FaCoins, FaShoppingCart, FaTrophy, FaClock, FaPaperPlane,
+ FaQuestionCircle, FaEnvelope, FaPhone, FaChevronDown, FaChevronUp,
+  FaGraduationCap, FaCoins, FaShoppingCart, FaTrophy, FaPaperPlane,
   FaHeadset, FaBook, FaLifeRing, FaComments, FaExternalLinkAlt, FaFileAlt, FaShieldAlt
 } from "react-icons/fa";
 
@@ -116,14 +115,10 @@ const CONTACT_OPTIONS = [
 
 export default function HelpSupportPage() {
   const navigate = useNavigate();
-  const { currentUser } = useApp();
   const [openFaq, setOpenFaq] = useState(null);
   const [contactForm, setContactForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [activeTab, setActiveTab] = useState("faq");
   const [submitted, setSubmitted] = useState(false);
-
-  const isStudent = currentUser?.role === "student";
-  const isTeacher = currentUser?.role === "teacher";
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -406,4 +401,3 @@ export default function HelpSupportPage() {
     </div>
   );
 }
-

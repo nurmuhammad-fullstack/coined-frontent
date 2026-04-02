@@ -123,7 +123,7 @@ export const emitMessageRead = (conversationId, messageId, userId) => {
   }
 };
 
-export default {
+const socketService = {
   initializeSocket,
   getSocket,
   disconnectSocket,
@@ -135,3 +135,4 @@ export default {
   emitMessageRead
 };
 
+export default socketService;

@@ -1,5 +1,5 @@
 // src/pages/teacher/TeacherStudentsPage.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Avatar, SectionLabel, Modal } from "../../components/ui";
@@ -279,4 +279,3 @@ export default function TeacherStudentsPage() {
     </div>
   );
 }
-

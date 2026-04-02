@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useApp } from "../../context/AppContext";
-import { Modal, SectionLabel } from "../../components/ui";
-import { FaClock, FaCheck, FaTimes, FaBell, FaCalendarAlt, FaSchool } from "react-icons/fa";
+import { SectionLabel } from "../../components/ui";
+import { FaClock, FaCheck, FaBell, FaCalendarAlt, FaSchool } from "react-icons/fa";
 
 const DAYS = [
   { value: 'monday', label: 'Dushanba' },
@@ -29,32 +29,37 @@ export default function TeacherSchedulePage() {
     notifyBefore10Minutes: true,
   });
 
-  useEffect(() => {
-    if (selectedClass) {
-      loadSchedule(selectedClass._id);
-    }
-  }, [selectedClass]);
-
-  const loadSchedule = async (classId) => {
-    setLoading(true);
-    try {
-      const data = await getScheduleForClass(classId);
-      if (data) {
-        setSchedule(data);
-        setForm({
-          enabled: data.enabled || false,
-          days: data.days || [],
-          time: data.time || '09:00',
-          notifyBefore8Hours: data.notifyBefore8Hours !== false,
-          notifyBefore10Minutes: data.notifyBefore10Minutes !== false,
-        });
+  const loadSchedule = useCallback(
+    async (classId) => {
+      setLoading(true);
+      try {
+        const data = await getScheduleForClass(classId);
+        if (data) {
+          setSchedule(data);
+          setForm({
+            enabled: data.enabled || false,
+            days: data.days || [],
+            time: data.time || '09:00',
+            notifyBefore8Hours: data.notifyBefore8Hours !== false,
+            notifyBefore10Minutes: data.notifyBefore10Minutes !== false,
+          });
+        }
+      } catch (err) {
+        showToast("❌ Schedule loading failed", "error");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      showToast("❌ Schedule loading failed", "error");
-    } finally {
-      setLoading(false);
+    },
+    [getScheduleForClass, showToast]
+  );
+
+  const selectedClassId = selectedClass?._id;
+
+  useEffect(() => {
+    if (selectedClassId) {
+      loadSchedule(selectedClassId);
     }
-  };
+  }, [loadSchedule, selectedClassId]);
 
   const handleSave = async () => {
     if (!selectedClass) return;
@@ -277,4 +282,3 @@ export default function TeacherSchedulePage() {
     </div>
   );
 }
-

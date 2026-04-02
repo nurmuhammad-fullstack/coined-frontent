@@ -81,7 +81,6 @@ export default function AccountSettingsPage() {
   };
 
   const handleUseInitials = () => {
-    const initials = name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
     // Clear avatarPreview to show initials
     setAvatarPreview("");
   };
@@ -587,4 +586,3 @@ export default function AccountSettingsPage() {
     </div>
   );
 }
-
