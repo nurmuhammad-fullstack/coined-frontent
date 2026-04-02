@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Avatar } from "../../components/ui";
 import { useApp } from "../../context/AppContext";
+import { API_BASE_URL } from "../../services/api";
 
 export default function TeacherQuizResultsPage() {
   const { id } = useParams();
@@ -14,14 +15,13 @@ export default function TeacherQuizResultsPage() {
   const [loading, setLoading]   = useState(true);
 
   const token = localStorage.getItem("coined_token");
-  const API   = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
   useEffect(() => {
     const load = async () => {
       try {
         const [qRes, rRes] = await Promise.all([
-          fetch(`${API}/quizzes/${id}`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API}/quizzes/${id}/results`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_BASE_URL}/quizzes/${id}`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_BASE_URL}/quizzes/${id}/results`, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
         const quizData = await qRes.json();
         const resultsData = await rRes.json();
@@ -47,7 +47,7 @@ export default function TeacherQuizResultsPage() {
       finally { setLoading(false); }
     };
     load();
-  }, [id, API, token, showToast]);
+  }, [id, token, showToast]);
 
   if (loading) return <div className="p-6 font-bold text-slate-400 dark:text-slate-500 text-center">Yuklanmoqda...</div>;
   if (!quiz)   return <div className="p-6 font-bold text-slate-400 dark:text-slate-500 text-center">Test topilmadi</div>;
@@ -120,4 +120,3 @@ export default function TeacherQuizResultsPage() {
     </div>
   );
 }
-

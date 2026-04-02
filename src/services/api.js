@@ -1,6 +1,12 @@
 // src/services/api.js
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+export const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5001/api");
+
+export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
+
+const BASE_URL = API_BASE_URL;
 
 export const getAvatarUrl = (avatar) => {
   if (!avatar) return null;

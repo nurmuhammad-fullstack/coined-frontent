@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { API_ORIGIN } from "./api";
 
 let socket = null;
 
@@ -31,16 +32,19 @@ export const initializeSocket = (token) => {
   }
 
   try {
-    socket = io('http://localhost:5001', {
+    const socketUrl = process.env.REACT_APP_SOCKET_URL || API_ORIGIN;
+    const options = {
       auth: {
-        token: token || getToken()
+        token: token || getToken(),
       },
-      transports: ['websocket', 'polling'],
+      transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       timeout: 20000,
-    });
+    };
+
+    socket = socketUrl ? io(socketUrl, options) : io(options);
 
     socket.on('connect', () => {
       console.log('🔌 Socket connected!');

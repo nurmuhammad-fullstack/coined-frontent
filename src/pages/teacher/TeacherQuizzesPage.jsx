@@ -2,6 +2,7 @@
   import { useState, useEffect, useCallback } from "react";
   import { useNavigate } from "react-router-dom";
   import { useApp } from "../../context/AppContext";
+  import { API_BASE_URL } from "../../services/api";
 
   const BLANK_Q    = { question: "", options: ["","","",""], correct: 0 };
   const BLANK_FORM = { title:"", subject:"", class:"", maxCoins:20, timeLimit:10, questions:[JSON.parse(JSON.stringify(BLANK_Q))] };
@@ -19,11 +20,10 @@
     const [saving, setSaving]   = useState(false);
 
     const token = localStorage.getItem("coined_token");
-    const API   = process.env.REACT_APP_API_URL || "http://localhost:5001/api";
 
     const loadQuizzes = useCallback(async () => {
       try {
-        const r = await fetch(`${API}/quizzes`, { headers: { Authorization:`Bearer ${token}` } });
+        const r = await fetch(`${API_BASE_URL}/quizzes`, { headers: { Authorization:`Bearer ${token}` } });
         const d = await r.json();
         if (!r.ok) throw new Error(d.message || 'Failed to load quizzes');
         setQuizzes(Array.isArray(d) ? d : []);
@@ -31,7 +31,7 @@
         console.error(e); 
         showToast("❌ Failed to load quizzes: " + (e.message || 'Unknown error'), "error");
       } finally { setLoading(false); }
-    }, [API, token, showToast]);
+    }, [token, showToast]);
 
     useEffect(() => { loadQuizzes(); }, [loadQuizzes]);
 
@@ -48,7 +48,7 @@
       }
       setSaving(true);
       try {
-        const r = await fetch(`${API}/quizzes`,{ method:"POST", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`}, body:JSON.stringify(form) });
+        const r = await fetch(`${API_BASE_URL}/quizzes`,{ method:"POST", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`}, body:JSON.stringify(form) });
         if(!r.ok) throw new Error((await r.json()).message);
         showToast("✅ Test yaratildi!");
         setView("list"); setForm(JSON.parse(JSON.stringify(BLANK_FORM))); loadQuizzes();
@@ -57,12 +57,12 @@
 
     const handleDelete = async (id, title) => {
       if(!window.confirm(`"${title}" testini o'chirmoqchimisiz?`)) return;
-      await fetch(`${API}/quizzes/${id}`,{ method:"DELETE", headers:{Authorization:`Bearer ${token}`} });
+      await fetch(`${API_BASE_URL}/quizzes/${id}`,{ method:"DELETE", headers:{Authorization:`Bearer ${token}`} });
       showToast("Deleted"); setQuizzes(p=>p.filter(q=>q._id!==id));
     };
 
     const handleToggle = async (id) => {
-      const r = await fetch(`${API}/quizzes/${id}/toggle`,{ method:"PATCH", headers:{Authorization:`Bearer ${token}`} });
+      const r = await fetch(`${API_BASE_URL}/quizzes/${id}/toggle`,{ method:"PATCH", headers:{Authorization:`Bearer ${token}`} });
       const d = await r.json();
       setQuizzes(p=>p.map(q=>q._id===id?d:q));
     };
@@ -313,4 +313,3 @@
       </button>
     </div>
   );
-
