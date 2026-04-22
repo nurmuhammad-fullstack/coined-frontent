@@ -167,10 +167,13 @@ export function AppProvider({ children }) {
     }
   };
 
-  const spendCoins = async (userId, amount, itemName) => {
+  const spendCoins = async (itemId, amount) => {
     try {
-      await studentsAPI.removeCoins(userId, amount, itemName, "shop");
-      setCurrentUser(prev => ({ ...prev, coins: (prev.coins || 0) - amount }));
+      const purchase = await shopAPI.buyItem(itemId);
+      setCurrentUser(prev => ({
+        ...prev,
+        coins: purchase.student?.coins ?? Math.max(0, (prev.coins || 0) - amount),
+      }));
       return true;
     } catch {
       return false;

@@ -605,11 +605,11 @@ export default function ChatPage() {
                   return (
                     <div
                       key={msg._id || index}
-                      className={`flex ${!isMe ? "justify-end" : "justify-start"}`}
+                      className={`flex ${isMe ? "justify-end" : "justify-start"}`}
                     >
                       <div
                         className={`flex gap-2 max-w-[80%] ${
-                          !isMe ? "flex-row-reverse" : ""
+                          isMe ? "flex-row-reverse" : ""
                         }`}
                       >
                         {!isMe && showAvatar && (
@@ -618,12 +618,12 @@ export default function ChatPage() {
                         {!isMe && !showAvatar && <div className="w-8" />}
                         <div
                           className={`flex flex-col ${
-                            !isMe ? "items-end" : "items-start"
+                            isMe ? "items-end" : "items-start"
                           }`}
                         >
                           <div
                             className={`px-4 py-2.5 rounded-2xl ${
-                              !isMe
+                              isMe
                                 ? "bg-gradient-to-r from-brand-500 to-brand-600 text-white rounded-br-md"
                                 : isTeacher
                                 ? "bg-purple-500 text-white rounded-bl-md"
@@ -636,7 +636,7 @@ export default function ChatPage() {
                             <span className="text-slate-400 dark:text-slate-500 text-xs">
                               {formatTime(msg.createdAt)}
                             </span>
-                            {getMessageStatusIcon(msg.status, !isMe)}
+                            {getMessageStatusIcon(msg.status, isMe)}
                           </div>
                         </div>
                       </div>
