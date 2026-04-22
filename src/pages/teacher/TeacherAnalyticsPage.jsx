@@ -35,7 +35,7 @@ export default function TeacherAnalyticsPage() {
       setCoinStats(coinData);
       setShopStats(shopData);
     } catch (err) {
-      showToast("Failed to load analytics: " + err.message, "error");
+      showToast(`❌ ${err.message || "Failed to load analytics"}`, "error");
     } finally {
       setLoading(false);
     }

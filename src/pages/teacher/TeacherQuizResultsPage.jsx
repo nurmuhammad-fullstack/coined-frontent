@@ -29,12 +29,12 @@ export default function TeacherQuizResultsPage() {
         // Check if responses are OK
         if (!qRes.ok) {
           console.error('Quiz fetch error:', quizData);
-          showToast("❌ " + (quizData.message || "Failed to load quiz"), "error");
+          showToast(`❌ ${quizData.message || "Failed to load quiz"}`, "error");
           return;
         }
         if (!rRes.ok) {
           console.error('Results fetch error:', resultsData);
-          showToast("❌ " + (resultsData.message || "Failed to load results"), "error");
+          showToast(`❌ ${resultsData.message || "Failed to load results"}`, "error");
           setResults([]);
         } else {
           setResults(resultsData);
@@ -42,7 +42,7 @@ export default function TeacherQuizResultsPage() {
         setQuiz(quizData);
       } catch (err) { 
         console.error(err); 
-        showToast("❌ " + (err.message || "Failed to load data"), "error");
+        showToast(`❌ ${err.message || "Failed to load quiz data"}`, "error");
       }
       finally { setLoading(false); }
     };
@@ -62,11 +62,11 @@ export default function TeacherQuizResultsPage() {
       <div className="flex items-center gap-3">
         <button onClick={() => navigate("/teacher/quizzes")}
           className="flex justify-center items-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 border-none rounded-xl w-9 h-9 text-slate-600 dark:text-slate-300 cursor-pointer">
-          ←
+          â†
         </button>
         <div>
           <h2 className="font-poppins font-black text-slate-800 dark:text-white text-xl">{quiz.title}</h2>
-          <p className="text-slate-400 dark:text-slate-500 text-xs">{quiz.questions?.length} savol • max 🪙{quiz.maxCoins}</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs">{quiz.questions?.length} savol â€¢ max ðŸª™{quiz.maxCoins}</p>
         </div>
       </div>
 
@@ -89,14 +89,14 @@ export default function TeacherQuizResultsPage() {
       {/* Results */}
       {results.length === 0 ? (
         <div className="py-12 text-slate-400 dark:text-slate-500 text-center">
-          <div className="mb-3 text-5xl">📭</div>
+          <div className="mb-3 text-5xl">ðŸ“­</div>
           <p className="font-bold dark:text-slate-400">Hali hech kim yechmagan</p>
         </div>
       ) : (
         <div className="space-y-3">
           <p className="font-extrabold text-slate-400 dark:text-slate-500 text-xs uppercase tracking-wider">Natijalar</p>
           {results.map((r, i) => {
-            const medals = ["🥇","🥈","🥉"];
+            const medals = ["ðŸ¥‡","ðŸ¥ˆ","ðŸ¥‰"];
             const scoreColor = r.score >= 80 ? "text-green-600 dark:text-green-400" : r.score >= 50 ? "text-amber-500" : "text-red-500 dark:text-red-400";
             return (
               <div key={r._id} className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl">
@@ -105,12 +105,12 @@ export default function TeacherQuizResultsPage() {
                 <div className="flex-1 min-w-0">
                   <p className="font-extrabold text-slate-800 dark:text-white text-sm">{r.student?.name}</p>
                   <p className="text-slate-400 dark:text-slate-500 text-xs">
-                    ⏱ {Math.floor((r.timeTaken || 0) / 60)}:{String((r.timeTaken || 0) % 60).padStart(2,'0')} min
+                    â± {Math.floor((r.timeTaken || 0) / 60)}:{String((r.timeTaken || 0) % 60).padStart(2,'0')} min
                   </p>
                 </div>
                 <div className="text-right">
                   <p className={`font-poppins font-black text-lg ${scoreColor}`}>{r.score}%</p>
-                  <p className="font-bold text-brand-600 dark:text-brand-400 text-xs">+🪙{r.coinsEarned}</p>
+                  <p className="font-bold text-brand-600 dark:text-brand-400 text-xs">+ðŸª™{r.coinsEarned}</p>
                 </div>
               </div>
             );
@@ -120,3 +120,4 @@ export default function TeacherQuizResultsPage() {
     </div>
   );
 }
+

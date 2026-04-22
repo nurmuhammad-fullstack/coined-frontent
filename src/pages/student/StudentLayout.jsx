@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Toast, Avatar } from "../../components/ui";
 import { DevUpLogo } from "../../components/DevUpLogo";
+import { APP_NAME } from "../../config/appConfig";
 import { FaHome, FaWallet, FaGift, FaTrophy, FaEdit, FaUser, FaSignOutAlt, FaBell, FaQuestionCircle, FaCommentDots } from "react-icons/fa";
 
 const TABS = [
@@ -58,7 +59,7 @@ export default function StudentLayout() {
               <div className="flex items-center gap-3">
                 <DevUpLogo size={100} />
                 <div>
-                  <p className="font-poppins font-black text-slate-800 dark:text-white text-lg leading-none">DevUp</p>
+                  <p className="font-poppins font-black text-slate-800 dark:text-white text-lg leading-none">{APP_NAME}</p>
                   <p className="font-medium text-slate-400 dark:text-slate-500 text-xs">Student Portal</p>
                 </div>
               </div>

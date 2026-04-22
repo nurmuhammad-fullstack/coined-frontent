@@ -45,7 +45,7 @@ export default function TeacherSchedulePage() {
           });
         }
       } catch (err) {
-        showToast("❌ Schedule loading failed", "error");
+        showToast(`❌ ${err.message || "Failed to load schedule"}`, "error");
       } finally {
         setLoading(false);
       }
@@ -65,7 +65,7 @@ export default function TeacherSchedulePage() {
     if (!selectedClass) return;
     
     if (form.enabled && form.days.length === 0) {
-      showToast("❌ Select at least one day", "error");
+      showToast("âŒ Select at least one day", "error");
       return;
     }
 
@@ -73,13 +73,13 @@ export default function TeacherSchedulePage() {
     try {
       const result = await updateScheduleForClass(selectedClass._id, form);
       if (result.ok) {
-        showToast("✅ Schedule saved!");
+        showToast("âœ… Schedule saved!");
         setSchedule(result.schedule);
       } else {
-        showToast("❌ " + (result.message || "Failed"), "error");
+        showToast(`❌ ${result.message || "Failed to save schedule"}`, "error");
       }
     } catch (err) {
-      showToast("❌ " + (err.message || "Failed"), "error");
+      showToast(`❌ ${err.message || "Failed to save schedule"}`, "error");
     } finally {
       setSaving(false);
     }
@@ -253,7 +253,7 @@ export default function TeacherSchedulePage() {
             disabled={saving || !form.enabled}
             className="bg-brand-500 hover:bg-brand-600 disabled:opacity-50 py-4 rounded-xl w-full font-extrabold text-white text-sm transition-all disabled:cursor-not-allowed"
           >
-            {saving ? 'Saqlanmoqda...' : '💾 Saqlash'}
+            {saving ? 'Saqlanmoqda...' : 'ðŸ’¾ Saqlash'}
           </button>
         </div>
       )}
@@ -282,3 +282,4 @@ export default function TeacherSchedulePage() {
     </div>
   );
 }
+

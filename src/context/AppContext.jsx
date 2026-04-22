@@ -1,6 +1,7 @@
 // src/context/AppContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { authAPI, studentsAPI, shopAPI, quizzesAPI, notificationsAPI, classesAPI, scheduleAPI } from "../services/api";
+import { APP_NAME } from "../config/appConfig";
 import { FaCoins } from "react-icons/fa";
 
 const AppContext = createContext(null);
@@ -314,7 +315,7 @@ export function AppProvider({ children }) {
       <div className="flex justify-center items-center bg-slate-50 dark:bg-slate-900 min-h-screen">
         <div className="text-center">
           <div className="mb-3 text-5xl animate-bounce"><FaCoins /></div>
-          <p className="font-bold text-slate-500 dark:text-slate-400">Loading DevUp...</p>
+          <p className="font-bold text-slate-500 dark:text-slate-400">Loading {APP_NAME}...</p>
         </div>
       </div>
     );

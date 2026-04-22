@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { APP_NAME, COPYRIGHT_YEAR } from "../config/appConfig";
 import { FaGraduationCap, FaChalkboardTeacher, FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
@@ -39,7 +40,7 @@ export default function LoginPage() {
           {/* Logo */}
 
           <h2 className="mb-1 font-poppins font-bold text-slate-800 dark:text-white text-2xl text-center">Welcome Back</h2>
-          <p className="mb-6 text-slate-500 dark:text-slate-400 text-sm text-center">Sign in to continue to DevUp</p>
+          <p className="mb-6 text-slate-500 dark:text-slate-400 text-sm text-center">Sign in to continue to {APP_NAME}</p>
 
           {/* Role toggle */}
           <div className="flex bg-slate-100 dark:bg-slate-700/50 mb-6 p-1.5 rounded-2xl">
@@ -119,7 +120,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="mt-6 text-slate-400 dark:text-slate-500 text-xs text-center">
-          2026 CoinEd. All rights reserved.
+          © {COPYRIGHT_YEAR} {APP_NAME}. All rights reserved.
         </p>
         <div className="flex justify-center gap-3 mt-2">
           <Link to="/terms" className="text-slate-400 hover:text-brand-500 dark:text-slate-500 text-xs transition-colors">

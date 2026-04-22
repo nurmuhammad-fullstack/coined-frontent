@@ -54,7 +54,7 @@ export default function ChatPage() {
       setConversations(data);
     } catch (err) {
       console.error("Failed to load conversations:", err);
-      showToast("❌ Failed to load conversations", "error");
+      showToast(`❌ ${err.message || "Failed to load conversations"}`, "error");
     }
   }, [showToast]);
 
@@ -70,7 +70,7 @@ export default function ChatPage() {
           setMessages((prev) => [...data.messages, ...prev]);
         }
       } catch (err) {
-        if (page === 1) showToast("❌ Failed to load messages", "error");
+        if (page === 1) showToast(`❌ ${err.message || "Failed to load messages"}`, "error");
       } finally {
         if (page === 1) setLoadingMessages(false);
       }
@@ -195,7 +195,7 @@ export default function ChatPage() {
         .then(setAllStudents)
         .catch((err) => {
           console.error("Failed to load students:", err);
-          showToast("❌ Failed to load students for chat", "error");
+          showToast(`❌ ${err.message || "Failed to load students for chat"}`, "error");
         });
     }
   }, [isTeacher, showToast]);
@@ -253,7 +253,7 @@ export default function ChatPage() {
       // Refresh conversations to update last message
       loadConversations();
     } catch (err) {
-      showToast("❌ Failed to send message", "error");
+      showToast(`❌ ${err.message || "Failed to send message"}`, "error");
     } finally {
       setLoading(false);
     }
@@ -300,7 +300,7 @@ export default function ChatPage() {
       setShowNewChatDropdown(false);
       loadConversations();
     } catch (err) {
-      showToast("❌ Failed to start conversation", "error");
+      showToast(`❌ ${err.message || "Failed to start conversation"}`, "error");
     }
   };
 
@@ -697,3 +697,5 @@ export default function ChatPage() {
     </div>
   );
 }
+
+

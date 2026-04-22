@@ -29,7 +29,7 @@
         setQuizzes(Array.isArray(d) ? d : []);
       } catch(e){ 
         console.error(e); 
-        showToast("❌ Failed to load quizzes: " + (e.message || 'Unknown error'), "error");
+        showToast(`❌ ${e.message || "Failed to load quizzes"}`, "error");
       } finally { setLoading(false); }
     }, [token, showToast]);
 
@@ -41,18 +41,18 @@
     const updateOpt = (qi,oi,val) => setForm(f=>{ const qs=[...f.questions]; const opts=[...qs[qi].options]; opts[oi]=val; qs[qi]={...qs[qi],options:opts}; return {...f,questions:qs}; });
 
     const handleSave = async () => {
-      if(!form.title.trim()){ showToast("❌ Test nomini kiriting","error"); return; }
+      if(!form.title.trim()){ showToast("âŒ Test nomini kiriting","error"); return; }
       for(let i=0;i<form.questions.length;i++){
-        if(!form.questions[i].question.trim()){ showToast(`❌ ${i+1}-savol bo'sh`,"error"); return; }
-        if(form.questions[i].options.some(o=>!o.trim())){ showToast(`❌ ${i+1}-savol variantlari to'liq emas`,"error"); return; }
+        if(!form.questions[i].question.trim()){ showToast(`âŒ ${i+1}-savol bo'sh`,"error"); return; }
+        if(form.questions[i].options.some(o=>!o.trim())){ showToast(`âŒ ${i+1}-savol variantlari to'liq emas`,"error"); return; }
       }
       setSaving(true);
       try {
         const r = await fetch(`${API_BASE_URL}/quizzes`,{ method:"POST", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`}, body:JSON.stringify(form) });
         if(!r.ok) throw new Error((await r.json()).message);
-        showToast("✅ Test yaratildi!");
+        showToast("âœ… Test yaratildi!");
         setView("list"); setForm(JSON.parse(JSON.stringify(BLANK_FORM))); loadQuizzes();
-      } catch(err){ showToast("❌ "+err.message,"error"); } finally { setSaving(false); }
+      } catch(err){ showToast("âŒ "+err.message,"error"); } finally { setSaving(false); }
     };
 
     const handleDelete = async (id, title) => {
@@ -67,7 +67,7 @@
       setQuizzes(p=>p.map(q=>q._id===id?d:q));
     };
 
-    /* ── LIST VIEW ── */
+    /* â”€â”€ LIST VIEW â”€â”€ */
     if(view==="list") return (
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-0 max-w-7xl">
         {/* Header */}
@@ -91,7 +91,7 @@
 
         {/* List */}
         {loading ? (
-          <div className="flex justify-center py-20"><div className="text-4xl animate-bounce">📝</div></div>
+          <div className="flex justify-center py-20"><div className="text-4xl animate-bounce">ðŸ“</div></div>
         ) : quizzes.length===0 ? (
           <EmptyState onNew={()=>setView("create")} />
         ) : (
@@ -113,22 +113,22 @@
                       {quiz.subject && <span>{quiz.subject}</span>}
                       {quiz.class   && <span>Class {quiz.class}</span>}
                       <span>{quiz.questions?.length} savol</span>
-                      <span className="font-bold text-brand-500">🪙 {quiz.maxCoins} max</span>
+                      <span className="font-bold text-brand-500">ðŸª™ {quiz.maxCoins} max</span>
                     </div>
                   </div>
                 </div>
                 <div className="gap-2 grid grid-cols-3">
                   <button onClick={()=>navigate(`/teacher/quizzes/${quiz._id}`)}
                     className="col-span-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/30 dark:hover:bg-brand-800 py-2 border-none rounded-xl font-bold text-[11px] text-brand-600 dark:text-brand-400 transition-colors cursor-pointer">
-                    📊 Results
+                    ðŸ“Š Results
                   </button>
                   <button onClick={()=>handleToggle(quiz._id)}
                     className={`col-span-1 py-2 text-[11px] font-bold rounded-xl border-none cursor-pointer transition-colors ${quiz.active?"bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-800":"bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-800"}`}>
-                    {quiz.active?"⏸ Pause":"▶ Start"}
+                    {quiz.active?"â¸ Pause":"â–¶ Start"}
                   </button>
                   <button onClick={()=>handleDelete(quiz._id,quiz.title)}
                     className="col-span-1 bg-red-50 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-800 py-2 border-none rounded-xl font-bold text-[11px] text-red-400 transition-colors cursor-pointer">
-                    ✕ Delete
+                    âœ• Delete
                   </button>
                 </div>
               </div>
@@ -138,13 +138,13 @@
       </div>
     );
 
-    /* ── CREATE VIEW ── */
+    /* â”€â”€ CREATE VIEW â”€â”€ */
     return (
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-0 pb-12 max-w-7xl">
         <div className="flex items-center gap-3 mb-7">
           <button onClick={()=>setView("list")}
             className="flex justify-center items-center bg-white hover:bg-indigo-50 dark:bg-slate-700 dark:hover:bg-indigo-900/30 border border-slate-200 dark:border-slate-600 border-none rounded-xl w-9 h-9 text-slate-500 dark:text-slate-300 text-base transition-colors cursor-pointer">
-            ←
+            â†
           </button>
           <div>
             <h2 className="font-black text-slate-900 dark:text-white text-2xl tracking-tight">Yangi Test</h2>
@@ -173,27 +173,27 @@
 
             <div className="gap-3 grid grid-cols-2">
               <div className="bg-violet-50 dark:bg-violet-900/30 p-4 border border-violet-100 dark:border-violet-800 rounded-2xl">
-                <p className="mb-1 font-extrabold text-[10px] text-violet-400 uppercase tracking-wider">Max 🪙</p>
+                <p className="mb-1 font-extrabold text-[10px] text-violet-400 uppercase tracking-wider">Max ðŸª™</p>
                 <input type="number" value={form.maxCoins} min="1" max="200"
                   onChange={e=>setForm(f=>({...f,maxCoins:parseInt(e.target.value)||20}))}
                   className="bg-transparent border-none outline-none w-full font-black text-violet-700 dark:text-violet-400 text-2xl" />
               </div>
               <div className="bg-sky-50 dark:bg-sky-900/30 p-4 border border-sky-100 dark:border-sky-800 rounded-2xl">
-                <p className="mb-1 font-extrabold text-[10px] text-sky-400 uppercase tracking-wider">⏱ min</p>
+                <p className="mb-1 font-extrabold text-[10px] text-sky-400 uppercase tracking-wider">â± min</p>
                 <input type="number" value={form.timeLimit} min="1" max="60"
                   onChange={e=>setForm(f=>({...f,timeLimit:parseInt(e.target.value)||10}))}
                   className="bg-transparent border-none outline-none w-full font-black text-sky-700 dark:text-sky-400 text-2xl" />
               </div>
             </div>
 
-            <Section label="🪙 Coin jadvali">
+            <Section label="ðŸª™ Coin jadvali">
               <div className="space-y-3">
                 {[
-                  { pct: 100, icon: '🪙', color: 'bg-gradient-to-br from-amber-300 to-amber-500' },
-                  { pct: 80, icon: '🪙', color: 'bg-gradient-to-br from-slate-300 to-slate-400' },
-                  { pct: 60, icon: '🪙', color: 'bg-gradient-to-br from-orange-300 to-orange-400' },
-                  { pct: 40, icon: '🪙', color: 'bg-gradient-to-br from-indigo-300 to-indigo-400' },
-                  { pct: 0, icon: '🪙', color: 'bg-gradient-to-br from-slate-200 to-slate-300' }
+                  { pct: 100, icon: 'ðŸª™', color: 'bg-gradient-to-br from-amber-300 to-amber-500' },
+                  { pct: 80, icon: 'ðŸª™', color: 'bg-gradient-to-br from-slate-300 to-slate-400' },
+                  { pct: 60, icon: 'ðŸª™', color: 'bg-gradient-to-br from-orange-300 to-orange-400' },
+                  { pct: 40, icon: 'ðŸª™', color: 'bg-gradient-to-br from-indigo-300 to-indigo-400' },
+                  { pct: 0, icon: 'ðŸª™', color: 'bg-gradient-to-br from-slate-200 to-slate-300' }
                 ].map(({ pct, icon, color }) => (
                   <div key={pct} className="flex items-center gap-3">
                     <span className={`w-7 h-7 flex items-center justify-center ${color} rounded-full text-sm`}>
@@ -207,17 +207,17 @@
                     </div>
                     <span className="w-8 font-bold text-[10px] text-slate-400 dark:text-slate-500 text-right">{pct}%</span>
                     <span className="w-12 font-black text-amber-500 text-xs text-right">
-                      🪙 {Math.round(form.maxCoins * pct / 100)}
+                      ðŸª™ {Math.round(form.maxCoins * pct / 100)}
                     </span>
                   </div>
                 ))}
               </div>
             </Section>
 
-            {/* Save — desktop */}
+            {/* Save â€” desktop */}
             <button onClick={handleSave} disabled={saving}
               className="hidden md:block bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 py-4 border-none rounded-2xl w-full font-black text-white text-sm transition-colors cursor-pointer">
-              {saving ? "Saqlanmoqda..." : `✅ Saqlash (${form.questions.length} savol)`}
+              {saving ? "Saqlanmoqda..." : `âœ… Saqlash (${form.questions.length} savol)`}
             </button>
           </div>
 
@@ -235,7 +235,7 @@
                   {form.questions.length>1 && (
                     <button onClick={()=>removeQ(qi)}
                       className="bg-transparent border-none font-bold text-[11px] text-red-400 hover:text-red-600 transition-colors cursor-pointer">
-                      ✕ O'chirish
+                      âœ• O'chirish
                     </button>
                   )}
                 </div>
@@ -245,7 +245,7 @@
                   className="bg-slate-50 focus:bg-white dark:bg-slate-700 dark:focus:bg-slate-600 mb-3 px-4 py-3 border border-slate-200 focus:border-indigo-400 dark:border-slate-600 rounded-xl outline-none w-full font-medium text-slate-800 dark:text-slate-200 text-sm transition-all resize-none" />
 
                 <p className="mb-2 font-extrabold text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                  Variantlar — to'g'risini tanlang
+                  Variantlar â€” to'g'risini tanlang
                 </p>
                 <div className="space-y-2">
                   {q.options.map((opt,oi)=>(
@@ -258,7 +258,7 @@
                         onClick={e=>e.stopPropagation()}
                         onChange={e=>updateOpt(qi,oi,e.target.value)}
                         className="flex-1 bg-transparent border-none outline-none font-medium text-slate-700 dark:text-slate-200 text-sm placeholder-slate-300 dark:placeholder-slate-500" />
-                      {q.correct===oi && <span className="flex-shrink-0 font-extrabold text-[11px] text-emerald-500">✓</span>}
+                      {q.correct===oi && <span className="flex-shrink-0 font-extrabold text-[11px] text-emerald-500">âœ“</span>}
                     </div>
                   ))}
                 </div>
@@ -271,7 +271,7 @@
               <span className="opacity-60 ml-1 text-[11px]">({form.questions.length}/20)</span>
             </button>
 
-            {/* Save — mobile */}
+            {/* Save â€” mobile */}
             <div className="md:hidden flex gap-3 pt-2">
               <button onClick={()=>setView("list")}
                 className="flex-1 bg-white dark:bg-slate-700 py-4 border border-slate-200 dark:border-slate-600 rounded-2xl font-bold text-slate-500 dark:text-slate-300 text-sm cursor-pointer">
@@ -279,7 +279,7 @@
               </button>
               <button onClick={handleSave} disabled={saving}
                 className="flex-[2] bg-indigo-500 disabled:opacity-50 py-4 border-none rounded-2xl font-black text-white text-sm cursor-pointer">
-                {saving ? "..." : "✅ Saqlash"}
+                {saving ? "..." : "âœ… Saqlash"}
               </button>
             </div>
           </div>
@@ -304,7 +304,7 @@
 
   const EmptyState = ({onNew}) => (
     <div className="flex flex-col justify-center items-center py-20 text-center">
-      <div className="flex justify-center items-center bg-indigo-50 dark:bg-indigo-900/30 mb-5 rounded-3xl w-20 h-20 text-4xl">📝</div>
+      <div className="flex justify-center items-center bg-indigo-50 dark:bg-indigo-900/30 mb-5 rounded-3xl w-20 h-20 text-4xl">ðŸ“</div>
       <p className="mb-1 font-black text-slate-800 dark:text-white text-xl">Hali test yo'q</p>
       <p className="mb-6 text-slate-400 dark:text-slate-500 text-sm">Birinchi testingizni yarating</p>
       <button onClick={onNew}
@@ -313,3 +313,4 @@
       </button>
     </div>
   );
+
